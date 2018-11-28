@@ -5,6 +5,7 @@
 I did a few things.
 To run the code (which you rly should do pls)
 1. INSTALL DOCKER
+  a. Docker for Mac (https://docs.docker.com/v17.12/docker-for-mac/install/)
 2. RUN DOCKER
 3. Run the build_and_run.sh script
 4. Go to <http://localhost:5001/users/ping>
