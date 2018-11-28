@@ -1,9 +1,18 @@
 language: python
 
+python:
+  - "3.7"
+
 services:
   - docker
 
+env:
+  - DOCKER_COMPOSE_VERSION=3.6
+
 before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+
   - docker-compose -f docker-compose-dev.yml build
   - docker-compose -f docker-compose-dev.yml up -d
   - docker ps -a
