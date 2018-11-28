@@ -15,6 +15,10 @@ before_install:
   - sudo chmod +x /usr/local/bin/docker-compose
   - docker-compose --version
 
+install:
   - docker-compose -f docker-compose-dev.yml build
   - docker-compose -f docker-compose-dev.yml up -d
   - docker ps -a
+
+script:
+  python test.py
