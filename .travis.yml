@@ -9,15 +9,10 @@ sudo: yes
 
 services:
   - docker
-  - docker-compose
-
-env:
-  - DOCKER_COMPOSE_VERSION=3.6
 
 before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-
+  - sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  
   - docker-compose -f docker-compose-dev.yml build
   - docker-compose -f docker-compose-dev.yml up -d
   - docker ps -a
