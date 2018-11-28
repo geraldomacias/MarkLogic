@@ -9,6 +9,7 @@ sudo: yes
 
 services:
   - docker
+  - docker-compose
 
 env:
   - DOCKER_COMPOSE_VERSION=3.6
