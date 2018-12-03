@@ -20,5 +20,9 @@ install:
   - docker-compose -f docker-compose-dev.yml up -d
   - docker ps -a
 
+before_script:
+  - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1 # new
+  - docker-compose -f docker-compose-dev.yml up --build -d
+
 script:
   python test.py
