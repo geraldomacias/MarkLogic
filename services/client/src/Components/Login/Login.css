@@ -2,6 +2,7 @@
   width: 30%;
   height: 60%;
   min-height: 600px;
+  min-width: 400px;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -28,4 +29,10 @@
   background-color: blue;
   color: white;
   height: 5%;
+}
+
+.footer {
+  margin: 4px;
+  font-size: 8px;
+  color: gray;
 }
