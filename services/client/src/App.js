@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import Login from './Pages/Login/Login'
+import Login from './Pages/Login/Login';
+import Home from './Pages/Home/Home';
+import CreateAccount from './Pages/CreateAccount/CreateAccount';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -17,11 +19,18 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <Login/>
-        </header>
-      </div>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            <Route path="/" exact component={Login} />
+            <Route path="/Home/" component={Home} />
+            <Route path="/newAccount/" component={CreateAccount} />
+          </header>
+        </div>
+
+      </Router>
+
+
     );
   }
 }
