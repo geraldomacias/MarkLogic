@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
 import './Login.css';
-import axios from 'axios';
 
 class Login extends Component {
-  constructor() {
-    super();
-  }
-  getUsers() {
-    axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`)
-    .then((res) => { console.log(res); })
-    .catch((err) => { console.log(err); });
-  }
-  
   render() {
     return (
       <div className = "login-container">

@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
 import Login from './Components/Login/Login'
+import axios from 'axios';
+
 class App extends Component {
+  constructor() {
+    super();
+    this.getUsers();
+  }
+  getUsers() {
+    axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`)
+    .then((res) => { console.log(res); })
+    .catch((err) => { console.log(err); });
+  }
+  
   render() {
     return (
       <div className="App">
