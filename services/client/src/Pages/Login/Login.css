@@ -1,0 +1,38 @@
+.login-container {
+  width: 30%;
+  height: 60%;
+  min-height: 600px;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.login-text {
+  color: black;
+}
+
+.login {
+  align-self: center;
+  max-width: 100%;
+  margin: 4px;
+}
+
+.image {
+  margin: 6px;
+  border: 1px solid black;
+}
+
+
+.submit {
+  margin-top: 6px;
+  background-color: blue;
+  color: white;
+  height: 5%;
+}
+
+.footer {
+  margin: 4px;
+  font-size: 8px;
+  color: gray;
+}
