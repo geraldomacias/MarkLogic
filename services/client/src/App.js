@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import Login from './Components/Login/Login'
+import Login from './Pages/Login/Login'
 import axios from 'axios';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
   constructor() {
@@ -13,7 +14,7 @@ class App extends Component {
     .then((res) => { console.log(res); })
     .catch((err) => { console.log(err); });
   }
-  
+
   render() {
     return (
       <div className="App">
