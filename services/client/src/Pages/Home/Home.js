@@ -6,6 +6,7 @@ class Home extends Component {
     return (
       <div className = "home-container">
         <div>This is the home component</div>
+        <input type="file">Upload</input>
       </div>
     );
   }
