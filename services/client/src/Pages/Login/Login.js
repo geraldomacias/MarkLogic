@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Login.css';
+import Home from '../Home/Home';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class Login extends Component {
   render() {
@@ -10,7 +12,9 @@ class Login extends Component {
         <input className = "login username"></input>
         <div className = "login-text">Email</div>
         <input className = "login password"></input>
-        <button className = "submit">Submit</button>
+        <button type = "button" className = "submit">
+          Submit
+        </button>
         <div className = "footer">dont have an account?</div>
       </div>
     );
