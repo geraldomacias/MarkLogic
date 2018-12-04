@@ -12,8 +12,8 @@ class Login extends Component {
         <input className = "login username"></input>
         <div className = "login-text">Email</div>
         <input className = "login password"></input>
-        <Link to="/Home">
-          <button type = "button" className = "submit">
+        <Link to="/Home" className = "submit" >
+          <button type = "button" >
             Submit
           </button>
         </Link>
