@@ -1,11 +1,7 @@
-# services/users/project/api/manage_s3.py
+# services/file_system/project/api/manage_s3.py
 
 import boto3
 from flask import Blueprint, jsonify, request
-from sqlalchemy import exc
-
-from project.api.models import User
-from project import db
 
 s3_blueprint = Blueprint('s3', __name__)
 

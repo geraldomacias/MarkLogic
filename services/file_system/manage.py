@@ -4,18 +4,10 @@ import unittest
 
 from flask.cli import FlaskGroup
 
-from project import create_app, db
-from project.api.models import User
+from project import create_app
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
-
-# adds new command line command called recreate_db
-@cli.command()
-def recreate_db():
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
 
 # add command to discover and run tests
 @cli.command()

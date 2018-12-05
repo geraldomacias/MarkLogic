@@ -53,3 +53,14 @@ services:
     depends_on:
       - users
 
+  file_system:
+    build:
+      context: ./services/file_system
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/file_system:/usr/src/app'
+    ports:
+      - 5005:5004
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
