@@ -1,21 +1,28 @@
 .login-container {
   width: 30%;
   height: 60%;
-  min-height: 600px;
   min-width: 400px;
+  min-height: 350px;
   display: flex;
   flex-direction: column;
-  background-color: white;
+  border-radius: 5px;
+  justify-content: center;
+  background-color: #E0E1DD
 }
 
 .login-text {
-  color: black;
+  color: #E0E1DD;
+
 }
 
 .login {
   align-self: center;
   max-width: 100%;
   margin: 4px;
+  border: none;
+  border-radius: 2px;
+  text-align: center;
+  background-color: #E0E1DD
 }
 
 .image {
@@ -25,10 +32,12 @@
 
 
 .submit {
+  align-self: center;
   margin-top: 6px;
-  background-color: blue;
+  background-color: #415a77;
   color: white;
   height: 5%;
+  width:50%;
 }
 
 .footer {

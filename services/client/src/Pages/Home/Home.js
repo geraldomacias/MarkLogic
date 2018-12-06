@@ -28,7 +28,7 @@ class Home extends Component {
     return (
       <div className = "home-container">
         <div>This is the home component</div>
-        <input type="file" ref={this.fileInput} />
+        <input type="file" accept=".csv" ref={this.fileInput} />
         <button onClick = {(e) => this.submitFiles(e)} >submit</button>
       </div>
     );
