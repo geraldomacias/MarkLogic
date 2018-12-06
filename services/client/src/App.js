@@ -24,7 +24,7 @@ class App extends Component {
           <header className="App-header">
             <Route path="/" exact component={Login} />
             <Route path="/Home/" component={Home} />
-            <Route path="/newAccount/" component={CreateAccount} />
+            <Route path="/CreateAccount/" component={CreateAccount} />
           </header>
         </div>
 
