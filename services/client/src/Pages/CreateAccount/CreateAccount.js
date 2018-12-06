@@ -10,12 +10,12 @@ class CreateAccount extends Component {
     super(props);
   }
   submitCreds = (e) => {
-    var credentialJSON = [{
+    var credentialJSON = {
       username: 'myarmo', email: 'mattyarmo@gmail.com'
-    }];
+    };
       axios.post('http://localhost:5001/users', credentialJSON, {
           headers: {
-            'Content-Type': 'json'
+            'Content-Type': 'application/json'
           }
       });
   }
