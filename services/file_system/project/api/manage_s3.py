@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify, request
 s3_blueprint = Blueprint('s3', __name__)
 
 
-@s3_blueprint.route('/s3/upload/<bucket_name, file_name, user_name>', methods=['POST'])
+@s3_blueprint.route('/s3/upload/<bucket_name>?<file_name>&<user_name>', methods=['POST'])
 def upload_to_bucket():
     bucket_name = request.args.get('bucket_name', None) 
     file_name = request.args.get('file_name', None) 
@@ -22,7 +22,7 @@ def upload_to_bucket():
     )
 
 
-@s3_blueprint.route('/s3/download/<bucket_name, file_name, orig_file_name, user_name>', methods=['GET'])
+@s3_blueprint.route('/s3/download/<bucket_name>?<file_name>&<orig_file_name>&<user_name>', methods=['GET'])
 def download_from_bucket():
     bucket_name = request.args.get('bucket_name', None) 
     file_name = request.args.get('file_name', None) 
