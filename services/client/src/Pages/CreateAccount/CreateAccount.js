@@ -11,11 +11,11 @@ class CreateAccount extends Component {
   }
   submitCreds = (e) => {
     var credentialJSON = [{
-      username: null, email: null
+      username: 'myarmo', email: 'mattyarmo@gmail.com'
     }];
-      axios.post('http://localhost:3000/users', credentialJSON, {
+      axios.post('http://localhost:5001/users', credentialJSON, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'json'
           }
       });
   }
