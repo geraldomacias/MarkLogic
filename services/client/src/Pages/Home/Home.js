@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './Home.css';
 import axios from 'axios';
-
-
+import DragDrop from './../../Components/DragDrop/DragDrop';
 
 class Home extends Component {
   constructor(props) {
@@ -21,17 +20,15 @@ class Home extends Component {
           }
       });
     }
-
   }
 
   render() {
     return (
-      <div className = "home-container">
-        <div>This is the home component</div>
-        <input type="file" accept=".csv" ref={this.fileInput} />
-        <button onClick = {(e) => this.submitFiles(e)} >submit</button>
+      <div className="home-container">
+        <DragDrop/>
       </div>
-    );
+
+    )
   }
 }
 
