@@ -81,7 +81,7 @@ class DragDrop extends Component {
                 {this.state.dragging &&
                  <div className="drag-drop-container">
                     <div className="drop-zone">
-                        <div>drop here :)</div>
+                        <div>👇 Drop files here 👇</div>
                     </div>
                 </div>
                 }
