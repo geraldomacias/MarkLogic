@@ -13,7 +13,6 @@ class DragDrop extends Component {
       }
     }
 
-
     handleFileDrop = (files) => {
       let fileList = this.state.files
       for (var i = 0; i < files.length; i++) {
@@ -37,12 +36,14 @@ class DragDrop extends Component {
     handleDrag = (e) => {
         e.preventDefault()
         e.stopPropagation()
+        this.setState({dragging: true})
     }
 
     handleDragIn = (e) => {
         e.preventDefault()
         e.stopPropagation()
         this.dragCounter++
+        this.setState({dragging: true})
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0){
             this.setState({dragging: true})
         }
@@ -60,20 +61,10 @@ class DragDrop extends Component {
         e.stopPropagation()
     }
 
-    componentDidMount() {
-        this.dragCounter = 0
-        let div = this.dropRef.current
-    }
-
-    componentWillUnmount() {
-        let div = this.dropRef.current
-    }
-
     render() {
         return (
             <div
               className="DragDrop"
-              ref={this.dropRef}
               onDragEnter={(e) => this.handleDragIn(e)}
               onDragOver={(e) => this.handleDragOver(e)}
               onDrop={(e) => this.handleDrop(e)}
