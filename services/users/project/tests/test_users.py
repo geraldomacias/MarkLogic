@@ -7,134 +7,156 @@ from project import db
 from project.api.models import User
 from project.tests.base import BaseTestCase
 
-def add_user(username, email):
-    user = User(username=username, email=email)
+def add_user(email, password):
+    user = User(email=email, password=password)
     db.session.add(user)
     db.session.commit()
     return user
 
+class TestUserModel(BaseTestCase):
+    """Tests for the Users Model."""
+
+    def test_encode_auth_token(self):
+        """Ensure auth tokens are encoded correctly."""
+        user = add_user('test@test.com', 'test')
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
+
+    def test_decode_auth_token(self):
+        """Ensure auth tokens are decoded correctly."""
+        user = add_user('test@test.com', 'test')
+        auth_token = user.encode_auth_token(user.id)
+        self.assertTrue(isinstance(auth_token, bytes))
+        self.assertTrue(User.decode_auth_token(auth_token) == 1)
+
+
 class TestUserService(BaseTestCase):
     """Tests for the Users Service."""
 
-    def test_users(self):
-        """Ensure the /ping route behaves correctly."""
-        response = self.client.get('/users/ping')
-        data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('pong!', data['message'])
-        self.assertIn('success', data['status'])
-
-    def test_add_user(self):
-        """Ensure a new user can be added to the database."""
+    def test_registration(self):
+        """Test for user registration."""
         with self.client:
             response = self.client.post(
-                '/users',
-                data=json.dumps({
-                    'username': 'spencer',
-                    'email': 'spencer.schurk@gmail.com'
-                }),
-                content_type='application/json',
+                '/users/register',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
             )
             data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully registered.')
+            self.assertTrue(data['auth_token'])
+            self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
-            self.assertIn('spencer.schurk@gmail.com was added!', data['message'])
-            self.assertIn('success', data['status'])
-    
-    def test_add_user_invalid_json(self):
-        """Ensure error is thrown if the JSON object is empty."""
+
+    def test_registered_with_already_registered_user(self):
+        """Test registration with already registered email"""
+        user = add_user('joe@gmail.com', 'test')
         with self.client:
             response = self.client.post(
-                '/users',
-                data=json.dumps({}),
-                content_type='application/json',
+                '/users/register',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
-            self.assertIn('fail', data['status'])
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(
+                data['message'] == 'User already exists. Please log in.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 202)
 
-    def test_add_user_invalid_json_keys(self):
-        """Ensure error is thrown if the JSON object does not have a username key."""
+    def test_registered_user_login(self):
+        """Test for login of registered user"""
         with self.client:
+            # user registration
+            resp_register = self.client.post(
+                '/users/register',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            data_register = json.loads(resp_register.data.decode())
+            self.assertTrue(data_register['status'] == 'success')
+            self.assertTrue(
+                data_register['message'] == 'Successfully registered.'
+            )
+            self.assertTrue(data_register['auth_token'])
+            self.assertTrue(resp_register.content_type == 'application/json')
+            self.assertEqual(resp_register.status_code, 201)
+            # registered user login
             response = self.client.post(
-                '/users',
-                data=json.dumps({
-                    'email': 'spencer.schurk@gmail.com'
-                }),
-                content_type='application/json',
+                '/users/login',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
             )
             data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertIn('Invalid payload.', data['message'])
-            self.assertIn('fail', data['status'])
-    
-    def test_add_user_duplicate_email(self):
-        """Ensure error is thrown if the email already exists."""
-        with self.client:
-            self.client.post(
-                '/users',
-                data=json.dumps({
-                    'username': 'spencer',
-                    'email': 'spencer.schurk@gmail.com'
-                }),
-                content_type='application/json',
-            )
-            response = self.client.post(
-                '/users',
-                data=json.dumps({
-                    'username': 'spencer',
-                    'email': 'spencer.schurk@gmail.com'
-                }),
-                content_type='application/json',
-            )
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 400)
-            self.assertIn('Sorry. That email already exists.', data['message'])
-            self.assertIn('fail', data['status'])
-
-    def test_single_user(self):
-        """Ensure get single user behaves correctly."""
-        user = add_user('spencer', 'spencer.schurk@gmail.com')
-        with self.client:
-            response = self.client.get(f'/users/{user.id}')
-            data = json.loads(response.data.decode())
-            self.assertEquals(response.status_code, 200)
-            self.assertIn('spencer', data['data']['username'])
-            self.assertIn('spencer.schurk@gmail.com', data['data']['email'])
-            self.assertIn('success', data['status'])
-
-    def test_single_user_no_id(self):
-        """Ensure error is thrown if an id is not provided."""
-        with self.client:
-            response = self.client.get('/users/blah')
-            data = json.loads(response.data.decode())
-            self.assertEquals(response.status_code, 404)
-            self.assertIn('User does not exist', data['message'])
-            self.assertIn('fail', data['status'])
-
-    def test_single_user_incorrect_id(self):
-        """Ensure error is thrown if the id does not exist."""
-        with self.client:
-            response = self.client.get('/users/999')
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, 404)
-            self.assertIn('User does not exist', data['message'])
-            self.assertIn('fail', data['status'])
-
-    def test_all_users(self):
-        """Ensure get all users behaves correctly."""
-        add_user('spencer', 'spencer.schurk@gmail.com')
-        add_user('rocketeer55', 'rocketeer555@gmail.com')
-        with self.client:
-            response = self.client.get('/users')
-            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully logged in.')
+            self.assertTrue(data['auth_token'])
+            self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(data['data']['users']), 2)
-            self.assertIn('spencer', data['data']['users'][0]['username'])
-            self.assertIn('spencer.schurk@gmail.com', data['data']['users'][0]['email'])
-            self.assertIn('rocketeer55', data['data']['users'][1]['username'])
-            self.assertIn('rocketeer555@gmail.com', data['data']['users'][1]['email'])
-            self.assertIn('success', data['status'])
+
+    def test_non_registered_user_login(self):
+        """Test for login of non-registered user"""
+        with self.client:
+            response = self.client.post(
+                '/users/login',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'User does not exist.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 404)
+
+    def test_registered_user_wrong_password(self):
+        """Test for login of registered user with incorrect password"""
+        with self.client:
+            # user registration
+            resp_register = self.client.post(
+                '/users/register',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            data_register = json.loads(resp_register.data.decode())
+            self.assertTrue(data_register['status'] == 'success')
+            self.assertTrue(
+                data_register['message'] == 'Successfully registered.'
+            )
+            self.assertTrue(data_register['auth_token'])
+            self.assertTrue(resp_register.content_type == 'application/json')
+            self.assertEqual(resp_register.status_code, 201)
+            # registered user login
+            response = self.client.post(
+                '/users/login',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='test'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Password is incorrect.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 401)
 
 
 if __name__ == '__main__':

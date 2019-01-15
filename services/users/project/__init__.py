@@ -3,11 +3,13 @@
 import os
 
 from flask import Flask
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 # instantiate the db
 db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 def create_app(script_info=None):
 
@@ -23,9 +25,10 @@ def create_app(script_info=None):
 
     # set up extensions
     db.init_app(app)
+    bcrypt.init_app(app)
 
     # register blueprints
-    from project.api.users import users_blueprint
+    from project.api.views import users_blueprint
     app.register_blueprint(users_blueprint)
 
     # shell context for flask cli
