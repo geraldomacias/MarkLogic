@@ -5,3 +5,9 @@
   align-items: center;
   justify-content: center;
 }
+
+.file-container {
+  height: 300;
+  width: 250;
+  padding: 4px;
+}

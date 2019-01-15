@@ -1,23 +1,34 @@
 import React, { Component } from 'react'
 import './DragDrop.css';
 
-
-// tutorial pulled from:
-// https://medium.com/@650egor/simple-drag-and-drop-file-upload-in-react-2cb409d88929
-//
-
 class DragDrop extends Component {
-    dropRef = React.createRef()
-    state = {
-        dragging: false
+    constructor(props) {
+      super(props);
+      this.dropRef = React.createRef()
+      this.state = {
+          dragging: false,
+          files: [
+
+          ]
+      }
+    }
+
+
+    handleFileDrop = (files) => {
+      let fileList = this.state.files
+      for (var i = 0; i < files.length; i++) {
+        if (!files[i].name) return
+        fileList.push(files[i].name)
+      }
+      this.setState({files: fileList})
     }
 
     handleDrop = (e) => {
         e.preventDefault()
         e.stopPropagation()
-        this.setState({drag: false})
+        this.setState({dragging: false})
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-            this.props.handleDrop(e.dataTransfer.files)
+            this.handleFileDrop(e.dataTransfer.files)
             // e.dataTransfer.clearData()
             this.dragCounter = 0
         }
@@ -27,7 +38,7 @@ class DragDrop extends Component {
         e.preventDefault()
         e.stopPropagation()
     }
-    
+
     handleDragIn = (e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -52,46 +63,37 @@ class DragDrop extends Component {
     componentDidMount() {
         this.dragCounter = 0
         let div = this.dropRef.current
-        div.addEventListener('dragenter', this.handleDragIn)
-        div.addEventListener('dragleave', this.handleDragOut)
-        div.addEventListener('dragover', this.handleDragOver)
-        div.addEventListener('drop', this.handleDrop)
     }
 
     componentWillUnmount() {
         let div = this.dropRef.current
-        div.removeEventListener('dragenter', this.handleDragIn)
-        div.removeEventListener('dragleave', this.handleDragOut)
-        div.removeEventListener('dragover', this.handleDragOver)
-        div.removeEventListener('drop', this.handleDrop)
     }
 
     render() {
         return (
             <div
-                style={{display: 'inline-block', position: 'relative'}}
-                ref={this.dropRef}
+              className="DragDrop"
+              ref={this.dropRef}
+              onDragEnter={(e) => this.handleDragIn(e)}
+              onDragOver={(e) => this.handleDragOver(e)}
+              onDrop={(e) => this.handleDrop(e)}
             >
+                {this.state.files.length > 0 ?   <div className="file-container">
+                    {this.state.files.map((file, index) =>
+                      <div key={index}>{file}</div>
+                    )}
+                  </div>
+                  :
+                  <div>no files uploaded</div>
+                }
+
                 {this.state.dragging &&
-                 <div
-                    className="drag-drop-container"
-                 >
-                    <div
-                        style={{
-                        position: 'absolute',
-                        top: '50%',
-                        right: 0,
-                        left: 0,
-                        textAlign: 'center',
-                        color: 'grey',
-                        fontSize: 36
-                        }}
-                    >
+                 <div className="drag-drop-container">
+                    <div className="drop-zone">
                         <div>drop here :)</div>
                     </div>
                 </div>
                 }
-                {this.props.children}
             </div>
         )
     }
