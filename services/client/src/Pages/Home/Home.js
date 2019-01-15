@@ -18,7 +18,7 @@ class Home extends Component {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-      }); 
+      });
     }
 
   }
@@ -44,13 +44,16 @@ class Home extends Component {
 
   render() {
     return (
-      <DragDrop handleDrop={this.handleDrop}>
-      <div style={{height: 300, width: 250}}>
-        {this.state.files.map((file) =>
-          <div key={0}>{file}</div>
-        )}
+      <div className="home-container">
+        <DragDrop handleDrop={this.handleDrop}>
+          <div style={{height: 300, width: 250}}>
+            {this.state.files.map((file, index) =>
+              <div key={index}>{file}</div>
+            )}
+          </div>
+        </DragDrop>
       </div>
-      </DragDrop>
+
     )
   }
 }

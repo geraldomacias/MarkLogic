@@ -7,9 +7,7 @@ import './DragDrop.css';
 //
 
 class DragDrop extends Component {
-
     dropRef = React.createRef()
-
     state = {
         dragging: false
     }
@@ -20,7 +18,7 @@ class DragDrop extends Component {
         this.setState({drag: false})
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             this.props.handleDrop(e.dataTransfer.files)
-            e.dataTransfer.clearData()
+            // e.dataTransfer.clearData()
             this.dragCounter = 0
         }
     }
@@ -29,6 +27,7 @@ class DragDrop extends Component {
         e.preventDefault()
         e.stopPropagation()
     }
+    
     handleDragIn = (e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -75,16 +74,7 @@ class DragDrop extends Component {
             >
                 {this.state.dragging &&
                  <div
-                    style={{
-                        border: 'dashed grey 4px',
-                        backgroundColor: 'rgba(255,255,255,.8)',
-                        position: 'absolute',
-                        top: 0,
-                        bottom: 0,
-                        left: 0, 
-                        right: 0,
-                        zIndex: 9999
-                    }}
+                    className="drag-drop-container"
                  >
                     <div
                         style={{
