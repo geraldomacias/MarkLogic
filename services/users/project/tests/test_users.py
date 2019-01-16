@@ -2,6 +2,7 @@
 
 import json
 import unittest
+import time
 
 from project import db
 from project.api.models import User
@@ -157,6 +158,64 @@ class TestUserService(BaseTestCase):
             self.assertTrue(data['message'] == 'Password is incorrect.')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 401)
+
+    def test_user_status(self):
+        """Test for user status"""
+        with self.client:
+            resp_register = self.client.post(
+                '/users/register',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            response = self.client.get(
+                '/users/status',
+                headers=dict(
+                    Authorization='Bearer ' + json.loads(
+                        resp_register.data.decode()
+                    )['auth_token']
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['data'] is not None)
+            self.assertTrue(data['data']['email'] == 'joe@gmail.com')
+            self.assertEqual(response.status_code, 200)
+    
+    def test_last_login_updated(self):
+        """Test to ensure last_login_date is being updated"""
+        with self.client:
+            resp_register = self.client.post(
+                '/users/register',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            time.sleep(1)
+            self.client.post(
+                '/users/login',
+                data=json.dumps(dict(
+                    email='joe@gmail.com',
+                    password='123456'
+                )),
+                content_type='application/json'
+            )
+            response = self.client.get(
+                '/users/status',
+                headers=dict(
+                    Authorization='Bearer ' + json.loads(
+                        resp_register.data.decode()
+                    )['auth_token']
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['data']['last_login_date'] is not None)
+            self.assertTrue(data['data']['last_login_date'] > data['data']['created_date'])
+
 
 
 if __name__ == '__main__':

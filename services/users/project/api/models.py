@@ -34,7 +34,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=current_app.config.get('AUTH_EXPIRATION_SECONDS')),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
@@ -45,6 +45,13 @@ class User(db.Model):
             )
         except Exception as e:
             return e
+    
+    def update_login_date(self):
+        """
+        Updates the last_login_date field for the user
+        """
+        self.last_login_date = datetime.datetime.now()
+        db.session.commit()
     
     @staticmethod
     def decode_auth_token(auth_token):
