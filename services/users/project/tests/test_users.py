@@ -14,6 +14,16 @@ def add_user(email, password):
     db.session.commit()
     return user
 
+def register_user(self, email, password):
+    return self.client.post(
+        '/users/register',
+        data=json.dumps(dict(
+            email=email,
+            password=password
+        )),
+        content_type='application/json'
+    )
+
 class TestUserModel(BaseTestCase):
     """Tests for the Users Model."""
 
@@ -37,14 +47,7 @@ class TestUserService(BaseTestCase):
     def test_registration(self):
         """Test for user registration."""
         with self.client:
-            response = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            response = register_user(self, 'joe@gmail.com', '123456')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Successfully registered.')
@@ -56,14 +59,7 @@ class TestUserService(BaseTestCase):
         """Test registration with already registered email"""
         user = add_user('joe@gmail.com', 'test')
         with self.client:
-            response = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            response = register_user(self, 'joe@gmail.com', '123456')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(
@@ -75,14 +71,7 @@ class TestUserService(BaseTestCase):
         """Test for login of registered user"""
         with self.client:
             # user registration
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             data_register = json.loads(resp_register.data.decode())
             self.assertTrue(data_register['status'] == 'success')
             self.assertTrue(
@@ -128,14 +117,7 @@ class TestUserService(BaseTestCase):
         """Test for login of registered user with incorrect password"""
         with self.client:
             # user registration
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             data_register = json.loads(resp_register.data.decode())
             self.assertTrue(data_register['status'] == 'success')
             self.assertTrue(
@@ -162,14 +144,7 @@ class TestUserService(BaseTestCase):
     def test_user_status(self):
         """Test for user status"""
         with self.client:
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             response = self.client.get(
                 '/users/status',
                 headers=dict(
@@ -187,14 +162,7 @@ class TestUserService(BaseTestCase):
     def test_last_login_updated(self):
         """Test to ensure last_login_date is being updated"""
         with self.client:
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             time.sleep(1)
             self.client.post(
                 '/users/login',
@@ -220,14 +188,7 @@ class TestUserService(BaseTestCase):
         """Test for logout before token expires"""
         with self.client:
             # user registration
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json',
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             data_register = json.loads(resp_register.data.decode())
             self.assertTrue(data_register['status'] == 'success')
             self.assertTrue(
@@ -268,14 +229,7 @@ class TestUserService(BaseTestCase):
         """Test for logout after token expires"""
         with self.client:
             # user registration
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             data_register = json.loads(resp_register.data.decode())
             self.assertTrue(data_register['status'] == 'success')
             self.assertTrue(
@@ -318,14 +272,7 @@ class TestUserService(BaseTestCase):
         """Test for logout after valid token gets blacklisted"""
         with self.client:
             # user registration
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             data_register = json.loads(resp_register.data.decode())
             self.assertTrue(data_register['status'] == 'success')
             self.assertTrue(
@@ -370,14 +317,7 @@ class TestUserService(BaseTestCase):
     def test_valid_blacklisted_token_user(self):
         """Test for user status with a blacklsited valid token"""
         with self.client:
-            resp_register = self.client.post(
-                '/users/register',
-                data=json.dumps(dict(
-                    email='joe@gmail.com',
-                    password='123456'
-                )),
-                content_type='application/json'
-            )
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
             # blacklist a valid token
             blacklist_token = BlacklistToken(
                 token=json.loads(resp_register.data.decode())['auth_token'])
