@@ -16,7 +16,7 @@ class TestDevelopmentConfig(TestCase):
         return app
 
     def test_app_is_development(self):
-        self.assertTrue(app.config['SECRET_KEY'] == 'my_precious')
+        self.assertTrue(app.config['SECRET_KEY'] != '')
         self.assertFalse(current_app is None)
         self.assertTrue(app.config['SQLALCHEMY_DATABASE_URI'] == os.environ.get('DATABASE_URL'))
         self.assertTrue(app.config['AUTH_EXPIRATION_SECONDS'] == 7200)
@@ -40,7 +40,7 @@ class TestProductionConfig(TestCase):
 
     def test_app_is_production(self):
         # TODO
-        # self.assertFalse(app.config['SECRET_KEY'] == 'my_precious')
+        self.assertTrue(app.config['SECRET_KEY'] != '')
         self.assertFalse(app.config['TESTING'])
         self.assertTrue(app.config['AUTH_EXPIRATION_SECONDS'] == 7200)
 
