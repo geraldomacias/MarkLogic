@@ -2,11 +2,14 @@
 
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
+from flask_cors import CORS
 
 from project import bcrypt, db
 from project.api.models import User , BlacklistToken
 
 users_blueprint = Blueprint('users', __name__)
+
+CORS(users_blueprint)
 
 class RegisterAPI(MethodView):
     """
