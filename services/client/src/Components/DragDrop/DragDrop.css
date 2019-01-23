@@ -1,0 +1,43 @@
+.DragDrop {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px dotted gray;
+  border-radius: 1px;
+}
+
+.DragDrop:hover {
+
+}
+
+.drag-drop-container {
+  border: dashed grey 6px;
+  background-color: rgba(255,255,255,.8);
+  position:absolute;
+  width: 50%;
+  height: 50%;
+  z-index: 9999;
+}
+
+.drop-zone {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  textAlign: center;
+  color: black;
+  fontSize: 36px;
+}
+
+/* .drop-zone {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  textAlign: center;
+  color: grey;
+  fontSize: 36px;
+  background-color: green;
+} */

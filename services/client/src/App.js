@@ -12,7 +12,7 @@ class App extends Component {
     this.getUsers();
   }
   getUsers() {
-    axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}users`)
+    axios.get(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`)
     .then((res) => { console.log(res); })
     .catch((err) => { console.log(err); });
   }
@@ -24,7 +24,7 @@ class App extends Component {
           <header className="App-header">
             <Route path="/" exact component={Login} />
             <Route path="/Home/" component={Home} />
-            <Route path="/newAccount/" component={CreateAccount} />
+            <Route path="/CreateAccount/" component={CreateAccount} />
           </header>
         </div>
 
