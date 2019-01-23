@@ -41,7 +41,6 @@ services:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
 
-
   nginx:
     build:
       context: ./services/nginx
@@ -69,3 +68,12 @@ services:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - users
+
+  machine_learning:
+    build:
+      context: ./services/machine_learning
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/machine_learning:/usr/src/app'
+    ports:
+      - 3030:3031
