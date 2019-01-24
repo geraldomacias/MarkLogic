@@ -16,7 +16,10 @@ class FileUpload extends Component {
     formData.append('file', this.state.file[0]);
     axios.get('/upload', {
         params: {
-          ID: 12345
+            // hard coded test params for now
+            file_name: "Basic_Stats.csv",
+            user_id: 12345,
+            bucket_name: "uploads" | "classified"
         }
       })
       .then(function (response) {
