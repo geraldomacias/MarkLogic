@@ -37,7 +37,7 @@ class FileUpload extends Component {
   render () {
     return (
       <form onSubmit={this.submitFile}>
-        <input label='upload file' type='file' onChange={this.handleFileUpload} />
+        <input label='upload file' type='file' accept=".csv" onChange={this.handleFileUpload} />
         <button type='submit'>Upload</button>
       </form>
     );
