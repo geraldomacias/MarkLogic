@@ -14,15 +14,13 @@ before_install:
   - sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
   - docker-compose --version
-
-install:
-  - docker-compose -f docker-compose-dev.yml build
-  - docker-compose -f docker-compose-dev.yml up -d
-  - docker ps -a
-
+  
 before_script:
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1 # new
   - docker-compose -f docker-compose-dev.yml up --build -d
 
 script:
-  python test.py
+  - docker-compose -f docker-compose-dev.yml run users pytest -v -W ignore::DeprecationWarning
+
+after_script:
+  - docker-compose -f docker-compose-dev.yml down

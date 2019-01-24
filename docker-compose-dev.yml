@@ -11,11 +11,11 @@ services:
     ports:
       - 5001:5000
     environment:
-      - FLASK_APP=project/__init__.py
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - SECRET_KEY=${CAPSTONE_SECRET_KEY:-"my_precious"}
     depends_on:
       - users-db
 
@@ -29,18 +29,34 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-  client:
+  file_system:
     build:
-      context: ./services/client
+      context: ./services/file_system
       dockerfile: Dockerfile-dev
     volumes:
-      - './services/client:/usr/src/app'
-      - '/usr/src/app/node_modules'
+      - './services/file_system:/usr/src/app'
     ports:
-      - 3007:3000
+      - 5005:5000
     environment:
-      - NODE_ENV=development
-      - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-dev
+    restart: always
+    ports:
+      - 80:80
     depends_on:
       - users
+      - file_system
 
+  machine_learning:
+    build:
+      context: ./services/machine_learning
+      dockerfile: Dockerfile-dev
+    volumes:
+      - './services/machine_learning:/usr/src/app'
+    ports:
+      - 3030:3031
