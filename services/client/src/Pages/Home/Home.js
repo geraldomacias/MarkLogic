@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Home.css';
 import axios from 'axios';
 import DragDrop from './../../Components/DragDrop/DragDrop';
+import FileUpload from '../../Components/FileUpload/FileUpload';
 
 class Home extends Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class Home extends Component {
     return (
       <div className="home-container">
         <DragDrop/>
+        <FileUpload/>
       </div>
 
     )
