@@ -3,7 +3,6 @@
 import os
 import boto3
 from flask import Blueprint, jsonify, request, Flask
-import constants
 
 s3_blueprint = Blueprint('s3', 's3', url_prefix='/s3')
 
@@ -29,13 +28,13 @@ def upload_to_bucket():
         return jsonify(response_object), 400
 
     # saves to a temp location
-    file_passed.save(os.path.join(contants.UPLOAD_FOLDER, file_name))
+    file_passed.save(os.path.join(os.getenv('UPLOAD_FOLDER'), file_name))
 
     if (requests.args.get('bucket_name', None) == 'uploads'):
-        bucket_name = constants.S3UPLOAD
+        bucket_name = os.getenv('S3_UPLOAD')
         file_type = "uploads"
     else:
-        bucket_name = constants.S3CLASSIFIED
+        bucket_name = os.getenv('S3_CLASSIFIED')
         file_type = "classified"
 
     client = boto3.client('s3')
@@ -43,7 +42,7 @@ def upload_to_bucket():
  
     client.upload_file(
         Bucket=bucket_name, # name of the bucket
-        Filename=constants.UPLOAD_FOLDER + file_name, # this is the name of the file that is being uploaded
+        Filename=os.getenv('UPLOAD_FOLDER') + file_name, # this is the name of the file that is being uploaded
         Key=key_name
     )
 
@@ -69,10 +68,10 @@ def download_from_bucket():
     user_id = request.args.get('user_id', None)
 
     if (requests.args.get('bucket_name', None) == 'uploads'):
-        bucket_name = constants.S3UPLOAD
+        bucket_name = os.getenv('S3_UPLOAD')
         file_type = "uploads"
     else:
-        bucket_name = constants.S3CLASSIFIED
+        bucket_name = os.getenv('S3_CLASSIFIED')
         file_type = "classified"
 
     client = boto3.client('s3')
