@@ -28,7 +28,6 @@ def decode_auth_token(auth_token):
     except jwt.InvalidTokenError:
         return 'Invalid token. Please log in again.'
 
-
 class BlacklistToken(db.Model):
     """
     Token Model for storing JWT tokens
@@ -54,3 +53,20 @@ class BlacklistToken(db.Model):
             return True
         else:
             return False
+
+class S3Files(db.Model):
+    """
+    Model for storing files and their corresponding urls
+    """
+    __tablename__ = 's3_files'
+
+    user_id = db.Column(db.Integer, primary_key=True)
+    input_filename = db.Column(db.String(128), nullable=False, primary_key=True)
+    input_url = db.Column(db.String(128), unique=True, nullable=False)
+    classified_filename = db.Column(db.String(128), nullable=True)
+    classified_url = db.Column(db.String(128), nullable=True)
+
+    def __init__(self, user_id, input_filename, input_url):
+        self.user_id = user_id
+        self.input_filename = input_filename
+        self.input_url = input_url
