@@ -2,13 +2,12 @@
 
 import os
 import boto3
-
 from flask import Blueprint, jsonify, request, Flask, make_response
 from flask.views import MethodView
 from flask_cors import CORS
 
 # from project import bcrypt, db
-# from project.api.models import User , BlacklistToken
+from models import decode_auth_token
 
 
 s3_blueprint = Blueprint('s3', __name__)
@@ -18,12 +17,25 @@ CORS(s3_blueprint)
 class UploadAPI(MethodView):
     
     def post(self):
-        response_object = {
-            'status': 'success'
-        }
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+
+
 
         # TODO: need to change to make it get user_id from token
-        user_id = request.args.get('user_id', None) 
+        user_id = decode_auth_token()
 
         if 'file' not in request.files:
             print('no file passed')
@@ -102,7 +114,6 @@ class DownloadAPI(MethodView):
                 'user_id': user_id
             }
         }
-
         return make_response(jsonify(response_object)), 200
 
 upload_view = UploadAPI.as_view('upload_api')
