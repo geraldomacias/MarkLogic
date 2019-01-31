@@ -17,7 +17,7 @@ class RegisterAPI(MethodView):
     """
 
     def post(self):
-        # get the post data
+        # get the post data (excellent use of comments - matt yarm)
         post_data = request.get_json()
         # check if the user already exists
         user = User.query.filter_by(email=post_data.get('email')).first()
@@ -34,8 +34,9 @@ class RegisterAPI(MethodView):
 
                 # generate the auth token
                 auth_token = user.encode_auth_token(user.id)
+                #the response object is kind of redundant? (matt yarm)
                 responseObject = {
-                    'status': 'success',
+                    'status': 'success', 
                     'message': 'Successfully registered.',
                     'auth_token': auth_token.decode()
                 }
@@ -48,6 +49,7 @@ class RegisterAPI(MethodView):
                 return make_response(jsonify(responseObject)), 401
         
         else:
+               #more so try to model after this
             responseObject = {
                 'status': 'fail',
                 'message': 'User already exists. Please log in.',
@@ -144,6 +146,7 @@ class UserAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 401
 
+#i think this endpoint is kind of redundant at this moment, but see how it could be useful in the feature
 class LogoutAPI(MethodView):
     """
     Logout Resource
