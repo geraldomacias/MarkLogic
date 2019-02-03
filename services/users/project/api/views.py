@@ -56,7 +56,7 @@ class RegisterAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 202
 
-# 
+# Logs in a user if password is valid
 class LoginAPI(MethodView):
     """
     User Login Resource
