@@ -10,7 +10,6 @@ from project import db
 
 from flask import current_app
 
-@staticmethod
 def decode_auth_token(auth_token):
     """
     Decodes the auth token

@@ -16,6 +16,7 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=${CAPSTONE_SECRET_KEY:-"my_precious"}
+      - PYTHONDONTWRITEBYTECODE=1
     depends_on:
       - users-db
 
@@ -46,6 +47,7 @@ services:
       - UPLOAD_FOLDER="/home/ec2-user/MarkLogic/services/file_system/project/api/uploadFolder"
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - PYTHONDONTWRITEBYTECODE=1
     depends_on:
       - users-db
 
@@ -63,6 +65,7 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=${CAPSTONE_SECRET_KEY:-my_precious}
+      - PYTHONDONTWRITEBYTECODE=1
     depends_on:
       - users-db
 
