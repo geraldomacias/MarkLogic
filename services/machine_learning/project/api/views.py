@@ -20,6 +20,7 @@ class StartML_API(MethodView):
     def post(self):
         # get the auth token
         auth_header = request.headers.get('Authorization')
+        post_data = request.get_json()
         if auth_header:
             try:
                 auth_token = auth_header.split(" ")[1]
@@ -38,16 +39,23 @@ class StartML_API(MethodView):
             if not isinstance(resp, str):
                 # Get the filenames from the post
                 post_data = request.get_json()
-                data = json.loads(post_data)
-                if data:
-                    for file_name in data['files']:
-                        # TODO : Do something with these filenames (they are string)
-                        print(file_name)
-                    responseObject = {
-                        'status': 'success',
-                        'message': 'Successfully started ML.'
-                    }
-                    return make_response(jsonify(responseObject)), 200
+                if post_data:
+                    files = post_data.get('files')
+                    if len(files) <= 0:
+                        responseObject = {
+                            'status': 'fail',
+                            'message': 'No files provided.'
+                        }
+                        return make_response(jsonify(responseObject)), 400
+                    else:
+                        for file_name in files:
+                            # TODO : Do something with these filenames (they are strings)
+                            print(file_name)
+                        responseObject = {
+                            'status': 'success',
+                            'message': 'Successfully started ML on ' + str(len(files)) + ' files.'
+                        }
+                        return make_response(jsonify(responseObject)), 200
                 else:
                     responseObject = {
                         'status': 'fail',

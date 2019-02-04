@@ -63,7 +63,7 @@ class TestStartML(BaseTestCase):
         """Test for starting ml with malformed bearer token."""
         with self.client:
             auth_token = encode_auth_token(1)
-            response=self.client.post(
+            response = self.client.post(
                 '/ml/start',
                 headers=dict(
                     Authorization='Bearer' + auth_token.decode()
@@ -73,3 +73,93 @@ class TestStartML(BaseTestCase):
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Bearer token malformed.')
             self.assertEqual(response.status_code, 401)
+
+    def test_startml_blacklisted_token(self):
+        """Test for starting ml with a blacklisted token."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # Blacklist a valid token
+            blacklist_token = BlacklistToken(auth_token.decode())
+            db.session.add(blacklist_token)
+            db.session.commit()
+            # blacklisted token request
+            response = self.client.post(
+                '/ml/start',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Token blacklisted. Please log in again.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_startml_expired_token(self):
+        """Test for starting ml with an expired token."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # wait for token to be invalidated
+            time.sleep(6)
+            response = self.client.post(
+                '/ml/start',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Signature expired. Please log in again.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_startml_no_files(self):
+        """Test for starting ml with no provided files."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.post(
+                '/ml/start',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'No files provided.')
+            self.assertEqual(response.status_code, 400)
+
+    def test_startml_empty_file_list(self):
+        """Test for starting ml with an empty file list."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.post(
+                '/ml/start',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                ),
+                data=json.dumps(dict(
+                    files=[]
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'No files provided.')
+            self.assertEqual(response.status_code, 400)
+
+    def test_startml(self):
+        """Test for starting ml with correct input."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.post(
+                '/ml/start',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                ),
+                data=json.dumps(dict(
+                    files=['file_1', 'file_2']
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully started ML on 2 files.')
+            self.assertEqual(response.status_code, 200)
