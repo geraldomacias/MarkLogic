@@ -49,7 +49,7 @@ class StartML_API(MethodView):
                         return make_response(jsonify(responseObject)), 400
                     else:
                         for file_name in files:
-                            # TODO : Do something with these filenames (they are strings)
+                            # TODO : Do something with these filenames (they are strings) @D3LTA
                             print(file_name)
                         responseObject = {
                             'status': 'success',

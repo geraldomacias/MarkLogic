@@ -58,7 +58,7 @@ services:
     volumes:
       - './services/machine_learning:/usr/src/app'
     ports:
-      - 3030:3031
+      - 5007:5000
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
