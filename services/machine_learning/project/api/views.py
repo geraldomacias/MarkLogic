@@ -12,7 +12,7 @@ ml_blueprint = Blueprint('ml', __name__)
 CORS(ml_blueprint)
 
 # Starts the ml component and provides filenames
-class StartML_API(MethodView):
+class MLStartAPI(MethodView):
     """
     Machine-Learning Starter
     """
@@ -20,7 +20,6 @@ class StartML_API(MethodView):
     def post(self):
         # get the auth token
         auth_header = request.headers.get('Authorization')
-        post_data = request.get_json()
         if auth_header:
             try:
                 auth_token = auth_header.split(" ")[1]
@@ -75,12 +74,61 @@ class StartML_API(MethodView):
             }
             return make_response(jsonify(responseObject)), 401
 
+class MLStatusAPI(MethodView):
+    """
+    Machine-Learning Status
+    """
+
+    def get(self):
+        # get the auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            # Check if decode_auth_token returnned a string (which means it failed)
+            # If it succeeded, resp now holds the user_id value
+            if not isinstance(resp, str):
+                # TODO : Return the actual status (completed, maybe % complete?? Put this info in the 'message')
+                responseObject = {
+                    'status': 'success',
+                    'message': 'ThE mAcHiNe MiGhT bE lEaRnInG.'
+                }
+                return make_response(jsonify(responseObject)), 200
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+
 # Define the API resources
-startml_view = StartML_API.as_view('startml_api')
+ml_start_view = MLStartAPI.as_view('startml_api')
+ml_status_view = MLStatusAPI.as_view('statusml_api')
 
 # Add rules for API endpoints
 ml_blueprint.add_url_rule(
     '/ml/start',
-    view_func=startml_view,
+    view_func=ml_start_view,
     methods=['POST']
+)
+ml_blueprint.add_url_rule(
+    '/ml/status',
+    view_func=ml_status_view,
+    methods=['GET']
 )
