@@ -22,6 +22,7 @@ before_script:
 script:
   - docker-compose -f docker-compose-dev.yml run users pytest -v -W ignore::DeprecationWarning
   - docker-compose -f docker-compose-dev.yml run file_system pytest -v -W ignore::DeprecationWarning
+  - docker-compose -f docker-compose-dev.yml run machine_learning pytest -v -W ignore::DeprecationWarning
 
 after_script:
   - docker-compose -f docker-compose-dev.yml down
