@@ -41,10 +41,10 @@ services:
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
-      - S3_UPLOAD="capstone.upload"
-      - S3_CLASSIFIED="capstone.classified"
-      - S3_STATIC="capstone.static"
-      - UPLOAD_FOLDER="/home/ec2-user/MarkLogic/services/file_system/project/api/uploadFolder"
+      - S3_UPLOAD=capstone.upload
+      - S3_CLASSIFIED=capstone.classified
+      - S3_STATIC=capstone.static
+      - UPLOAD_FOLDER=/home/ec2-user/MarkLogic/services/file_system/project/api/uploadFolder
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=${CAPSTONE_SECRET_KEY:-my_precious}
@@ -77,6 +77,8 @@ services:
     restart: always
     ports:
       - 80:80
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
     depends_on:
       - users
       - file_system
