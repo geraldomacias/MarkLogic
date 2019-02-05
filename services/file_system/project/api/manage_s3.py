@@ -2,12 +2,12 @@
 
 import os
 import boto3
-from flask import Blueprint, jsonify, request, Flask, make_response
+from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
 from flask_cors import CORS
 
 # from project import bcrypt, db
-from models import decode_auth_token
+from project.api.models import decode_auth_token
 
 
 s3_blueprint = Blueprint('s3', __name__)
@@ -17,67 +17,96 @@ CORS(s3_blueprint)
 class UploadAPI(MethodView):
     
     def post(self):
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            try:
-                auth_token = auth_header.split(" ")[1]
-            except IndexError:
-                responseObject = {
-                    'status': 'fail',
-                    'message': 'Bearer token malformed.'
-                }
-                return make_response(jsonify(responseObject)), 401
-        else:
-            auth_token = ''
-        if auth_token:
-            resp = decode_auth_token(auth_token)
+        auth_header = request.values.get('Authorization')
+
+        responseObject = {
+            'status': 'fail',
+            'message': '',
+        }
+
+        user_id = "testing_id"
+#        if auth_header:
+#            try:
+#                auth_token = auth_header.split(" ")[1]
+#            except IndexError:
+#                responseObject['message'] = 'Bearer token malformed.'
+#                return make_response(jsonify(responseObject)), 401
+#        else:
+#            auth_token = ''
+#         if auth_token:
+#            resp = User.decode_auth_token(auth_token)
+#            if not isinstance(resp, str):
+#                user = User.query.filter_by(id=resp).first()
+#                user_id = user.id
+#                responseObject['user_id'] = user_id
+#                resposneObject['email'] = user.email
+#            else:
+#                responseObject = {
+#                    'status': 'fail',
+#                    'message': resp
+#                }
+#                return make_response(jsonify(responseObject)), 401
+#        else:
+#            responseObject = {
+#                'status': 'fail',
+#                'message': 'Provide a valid auth token.'
+#            }
+#            return make_response(jsonify(responseObject)), 401
 
 
+        # FIXME: Temp keys for dev
+        ACCESS_ID='AKIAJCYLNW4GRKVGAIGA'
+        ACCESS_KEY='EQWk5FAv8pTLmEoL81VKYWnqJAcaFEJtp1bfOsTI'
 
-        # TODO: need to change to make it get user_id from token
-        user_id = decode_auth_token()
 
-        if 'file' not in request.files:
-            print('no file passed')
-            return jsonify(response_object), 400
+        client = boto3.client('s3',
+        aws_access_key_id=ACCESS_ID,
+        aws_secret_access_key= ACCESS_KEY)
 
-        file_passed = request.files['file'] 
-        file_name = file_passed.filename
 
-        if (file_name == ''):
-            print('no file selected')
-            return jsonify(response_object), 400
-
-        # saves to a temp location
-        file_passed.save(os.path.join(os.getenv('UPLOAD_FOLDER'), file_name))
-
-        if (requests.args.get('bucket_name', None) == 'uploads'):
-            bucket_name = os.getenv('S3_UPLOAD')
+        if (request.values.get('bucket_name') == 'uploads'):
+            bucket_name = os.getenv('S3_UPLOAD')[1:len(os.getenv('S3_UPLOAD'))-1]
             file_type = "uploads"
-        else:
-            bucket_name = os.getenv('S3_CLASSIFIED')
+        elif (request.values.get('bucket_name') == 'classified'):
+            bucket_name = os.getenv('S3_CLASSIFIED')[1:len(os.getenv('S3_CLASSIFIED'))-1]
             file_type = "classified"
+        else:
+            responseObject['message'] = "passed: " + request.values.get('bucket_name')
+            return make_response(jsonify(responseObject)), 401
+        responseObject['bucket'] = bucket_name
+        responseObject['user_id'] = user_id
 
-        client = boto3.client('s3')
-        key_name = file_name + '.' + user_id + '.' + file_type # this is the name of the file that will be stored in the bucket
-    
-        client.upload_file(
-            Bucket=bucket_name, # name of the bucket
-            Filename=os.getenv('UPLOAD_FOLDER') + file_name, # this is the name of the file that is being uploaded
-            Key=key_name
-        )
+
+        for files in request.files:
+            cur_file = request.files[files]
+            cur_name = request.files[files].filename
+            responseObject[files] = cur_name
+
+
+            if (cur_name == ''):
+                print('no file selected')
+                return jsonify(responseObject), 400
+
+            key_name = cur_name + '.' + user_id + '.' + file_type # this is the name of the file that will be stored in the bucket
+
+            client.upload_fileobj(
+                Bucket=bucket_name, # name of the bucket
+                Fileobj=cur_file, # this is the name of the file that is being uploaded
+                Key=key_name
+            )
+
+            responseObject[files] = key_name
+            responseObject['message'] = 'Everything is okay :)'
+
 
         # TODO: Check to see if user and file exist in DB
         # TODO: if yes, update with URL. else create new item
 
+        responseObject['status'] = 'success'
+
         response_object = {
             'status': 'success',
-            'data': {
-                'bucket_name': bucket_name,
-                'file_name': file_name,
-                'user_id': user_id,
-                'key_name': key_name
-            }
+            'data': responseObject
         }
         return make_response(jsonify(response_object)), 200
 
@@ -85,34 +114,102 @@ class UploadAPI(MethodView):
 class DownloadAPI(MethodView):
 
     def get(self):
-        file_name = request.args.get('file_name', None) 
-        orig_file_name = request.args.get('orig_file_name', None) 
-        user_id = request.args.get('user_id', None)
+        auth_header = request.values.get('Authorization')
 
-        if (requests.args.get('bucket_name', None) == 'uploads'):
-            bucket_name = os.getenv('S3_UPLOAD')
-            file_type = "uploads"
+        responseObject = {
+            'status': 'fail',
+            'message': '',
+        }
+
+        user_id = "testing_id"
+#        if auth_header:
+#            try:
+#                auth_token = auth_header.split(" ")[1]
+#            except IndexError:
+#                responseObject['message'] = 'Bearer token malformed.'
+#                return make_response(jsonify(responseObject)), 401
+#        else:
+#            auth_token = ''
+#         if auth_token:
+#            resp = User.decode_auth_token(auth_token)
+#            if not isinstance(resp, str):
+#                user = User.query.filter_by(id=resp).first()
+#                user_id = user.id
+#                responseObject['user_id'] = user_id
+#                resposneObject['email'] = user.email
+#            else:
+#                responseObject = {
+#                    'status': 'fail',
+#                    'message': resp
+#                }
+#                return make_response(jsonify(responseObject)), 401
+#        else:
+#            responseObject = {
+#                'status': 'fail',
+#                'message': 'Provide a valid auth token.'
+#            }
+#            return make_response(jsonify(responseObject)), 401
+
+
+        # Get Key_name
+        if 'key_name' not in request.values:
+            responseObject['message'] = "No key name given"
+            return jsonify(responseObject), 400
+        elif request.values.get('key_name') == '':
+            responseObject['message'] = "No key name given"
+            return jsonify(responseObject), 400
         else:
-            bucket_name = os.getenv('S3_CLASSIFIED')
+            key_name = request.values.get('key_name')
+
+        # Get file_name
+        if 'file_name' not in request.values:
+            responseObject['message'] = "No file name to save as"
+            return jsonify(responseObject), 400
+        elif request.values.get('file_name') == '':
+            responseObject['message'] = "No file name to save as"
+            return jsonify(responseObject), 400
+        else:
+            file_name = request.values.get('file_name')
+
+        # Get bucket_name
+        if (request.values.get('bucket_name') == 'uploads'):
+            bucket_name = os.getenv('S3_UPLOAD')[1:len(os.getenv('S3_UPLOAD'))-1]
+            file_type = "uploads"
+        elif (request.values.get('bucket_name') == 'classified'):
+            bucket_name = os.getenv('S3_CLASSIFIED')[1:len(os.getenv('S3_CLASSIFIED'))-1]
             file_type = "classified"
+        else:
+            responseObject['message'] = "passed: " + request.values.get('bucket_name')
+            return make_response(jsonify(responseObject)), 401
+        responseObject['key_name'] = key_name
+        responseObject['file_name'] = file_name
+        responseObject['bucket'] = bucket_name
+        responseObject['user_id'] = user_id
 
-        client = boto3.client('s3')
-        key_name = orig_file_name + '.' + user_id + '.' + file_type # this is the name of the file that was stored in the bucket
+        # FIXME: Temp keys for dev
+        ACCESS_ID='AKIAJCYLNW4GRKVGAIGA'
+        ACCESS_KEY='EQWk5FAv8pTLmEoL81VKYWnqJAcaFEJtp1bfOsTI'
 
-        client.download_file( 
-            Bucket=bucket_name, # name of the bucket
-            Filename=file_name, # this is the name you want the downloaded file saved as
-            Key=key_name
-        )
+        client = boto3.client('s3',
+        aws_access_key_id=ACCESS_ID,
+        aws_secret_access_key= ACCESS_KEY)
+
+
+        with open (file_name, 'wb') as data:
+            client.download_fileobj( 
+                Bucket=bucket_name, # name of the bucket
+                Fileobj=data, # this is the name you want the downloaded file saved as
+                Key=key_name
+            )
+            responseObject['data'] = data
+
+        responseObject['new_file'] = file_name
+        responseObject['message'] = 'Everything is okay :)'
+        responseObject['status'] = 'success'
 
         response_object = {
             'status': 'success',
-            'data': {
-                'bucket_name': bucket_name,
-                'file_name': file_name,
-                'orig_file_name': orig_file_name,
-                'user_id': user_id
-            }
+            'data': responseObject
         }
         return make_response(jsonify(response_object)), 200
 
@@ -120,12 +217,12 @@ upload_view = UploadAPI.as_view('upload_api')
 download_view = DownloadAPI.as_view('download_api')
 
 s3_blueprint.add_url_rule(
-    '/users/upload',
+    '/s3/upload',
     view_func=upload_view,
     methods=['POST']
 )
 s3_blueprint.add_url_rule(
-    '/users/download',
+    '/s3/download',
     view_func=download_view,
     methods=['GET']
 )
