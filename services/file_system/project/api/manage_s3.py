@@ -17,41 +17,46 @@ CORS(s3_blueprint)
 class UploadAPI(MethodView):
     
     def post(self):
-        auth_header = request.values.get('Authorization')
+        auth_header = request.headers.get('Authorization')
 
         responseObject = {
             'status': 'fail',
-            'message': '',
+            'message': ''
         }
 
-        user_id = "testing_id"
-#        if auth_header:
-#            try:
-#                auth_token = auth_header.split(" ")[1]
-#            except IndexError:
-#                responseObject['message'] = 'Bearer token malformed.'
-#                return make_response(jsonify(responseObject)), 401
-#        else:
-#            auth_token = ''
-#         if auth_token:
-#            resp = User.decode_auth_token(auth_token)
-#            if not isinstance(resp, str):
-#                user = User.query.filter_by(id=resp).first()
-#                user_id = user.id
-#                responseObject['user_id'] = user_id
-#                resposneObject['email'] = user.email
-#            else:
-#                responseObject = {
-#                    'status': 'fail',
-#                    'message': resp
-#                }
-#                return make_response(jsonify(responseObject)), 401
-#        else:
-#            responseObject = {
-#                'status': 'fail',
-#                'message': 'Provide a valid auth token.'
-#            }
-#            return make_response(jsonify(responseObject)), 401
+
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject['message'] = 'Bearer token malformed.'
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                user_id = resp
+                responseObject['user_id'] = user_id
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': "Issue with auth_token: " + resp
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+
+        if isinstance(user_id, int):
+            user_id = str(user_id)
+
+        if user_id == None or user_id == '' :
+            responseObject['message'] = "No user_id found"
+            return jsonify(responseObject), 400
 
 
         # FIXME: Temp keys for dev
@@ -65,13 +70,13 @@ class UploadAPI(MethodView):
 
 
         if (request.values.get('bucket_name') == 'uploads'):
-            bucket_name = os.getenv('S3_UPLOAD')[1:len(os.getenv('S3_UPLOAD'))-1]
+            bucket_name = os.getenv('S3_UPLOAD')
             file_type = "uploads"
         elif (request.values.get('bucket_name') == 'classified'):
-            bucket_name = os.getenv('S3_CLASSIFIED')[1:len(os.getenv('S3_CLASSIFIED'))-1]
+            bucket_name = os.getenv('S3_CLASSIFIED')
             file_type = "classified"
         else:
-            responseObject['message'] = "passed: " + request.values.get('bucket_name')
+            responseObject['message'] = "Incorrect bucket name passed"
             return make_response(jsonify(responseObject)), 401
         responseObject['bucket'] = bucket_name
         responseObject['user_id'] = user_id
@@ -96,13 +101,13 @@ class UploadAPI(MethodView):
             )
 
             responseObject[files] = key_name
-            responseObject['message'] = 'Everything is okay :)'
 
 
         # TODO: Check to see if user and file exist in DB
         # TODO: if yes, update with URL. else create new item
 
         responseObject['status'] = 'success'
+        responseObject['message'] = 'Everything is okay :)'
 
         response_object = {
             'status': 'success',
@@ -114,42 +119,46 @@ class UploadAPI(MethodView):
 class DownloadAPI(MethodView):
 
     def get(self):
-        auth_header = request.values.get('Authorization')
+        auth_header = request.headers.get('Authorization')
 
         responseObject = {
             'status': 'fail',
-            'message': '',
+            'message': ''
         }
 
-        user_id = "testing_id"
-#        if auth_header:
-#            try:
-#                auth_token = auth_header.split(" ")[1]
-#            except IndexError:
-#                responseObject['message'] = 'Bearer token malformed.'
-#                return make_response(jsonify(responseObject)), 401
-#        else:
-#            auth_token = ''
-#         if auth_token:
-#            resp = User.decode_auth_token(auth_token)
-#            if not isinstance(resp, str):
-#                user = User.query.filter_by(id=resp).first()
-#                user_id = user.id
-#                responseObject['user_id'] = user_id
-#                resposneObject['email'] = user.email
-#            else:
-#                responseObject = {
-#                    'status': 'fail',
-#                    'message': resp
-#                }
-#                return make_response(jsonify(responseObject)), 401
-#        else:
-#            responseObject = {
-#                'status': 'fail',
-#                'message': 'Provide a valid auth token.'
-#            }
-#            return make_response(jsonify(responseObject)), 401
 
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject['message'] = 'Bearer token malformed.'
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                user_id = resp
+                responseObject['user_id'] = user_id
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': "Issue with auth_token: " + resp
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+
+        if isinstance(user_id, int):
+            user_id = str(user_id)
+
+        if user_id == None or user_id == '' :
+            responseObject['message'] = "No user_id found"
+            return jsonify(responseObject), 400
 
         # Get Key_name
         if 'key_name' not in request.values:
@@ -173,10 +182,10 @@ class DownloadAPI(MethodView):
 
         # Get bucket_name
         if (request.values.get('bucket_name') == 'uploads'):
-            bucket_name = os.getenv('S3_UPLOAD')[1:len(os.getenv('S3_UPLOAD'))-1]
+            bucket_name = os.getenv('S3_UPLOAD')
             file_type = "uploads"
         elif (request.values.get('bucket_name') == 'classified'):
-            bucket_name = os.getenv('S3_CLASSIFIED')[1:len(os.getenv('S3_CLASSIFIED'))-1]
+            bucket_name = os.getenv('S3_CLASSIFIED')
             file_type = "classified"
         else:
             responseObject['message'] = "passed: " + request.values.get('bucket_name')
