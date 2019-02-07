@@ -37,7 +37,7 @@ services:
     volumes:
       - './services/file_system:/usr/src/app'
     ports:
-      - 5005:5004
+      - 5005:5000
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
