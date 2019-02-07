@@ -4,3 +4,4 @@ env
 .DS_Store
 services/client/node_modules/
 pems/
+AWSCreds.py

@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 # from project import bcrypt, db
 from project.api.models import decode_auth_token
-
+from project.api.AWSCreds import *
 
 s3_blueprint = Blueprint('s3', __name__)
 
@@ -23,7 +23,6 @@ class UploadAPI(MethodView):
             'status': 'fail',
             'message': ''
         }
-
 
         if auth_header:
             try:
@@ -58,16 +57,9 @@ class UploadAPI(MethodView):
             responseObject['message'] = "No user_id found"
             return jsonify(responseObject), 400
 
-
-        # FIXME: Temp keys for dev
-        ACCESS_ID='AKIAJCYLNW4GRKVGAIGA'
-        ACCESS_KEY='EQWk5FAv8pTLmEoL81VKYWnqJAcaFEJtp1bfOsTI'
-
-
         client = boto3.client('s3',
         aws_access_key_id=ACCESS_ID,
         aws_secret_access_key= ACCESS_KEY)
-
 
         if (request.values.get('bucket_name') == 'uploads'):
             bucket_name = os.getenv('S3_UPLOAD')
@@ -195,14 +187,9 @@ class DownloadAPI(MethodView):
         responseObject['bucket'] = bucket_name
         responseObject['user_id'] = user_id
 
-        # FIXME: Temp keys for dev
-        ACCESS_ID='AKIAJCYLNW4GRKVGAIGA'
-        ACCESS_KEY='EQWk5FAv8pTLmEoL81VKYWnqJAcaFEJtp1bfOsTI'
-
         client = boto3.client('s3',
         aws_access_key_id=ACCESS_ID,
         aws_secret_access_key= ACCESS_KEY)
-
 
         with open (file_name, 'wb') as data:
             client.download_fileobj( 
