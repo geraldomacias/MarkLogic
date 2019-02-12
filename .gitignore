@@ -6,3 +6,4 @@ services/client/node_modules/
 pems/
 htmlcov/
 .coverage
+.aws/
