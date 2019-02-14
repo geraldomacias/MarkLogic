@@ -4,9 +4,13 @@ import json
 import sys
 
 
+
+json.dumps(dictionary_name)
+
+
 # Open a file
 def matchSport(jsonInput):
-    match = json.load(jsonInput)
+    match = json.loads(jsonInput)
 
     # Import json file
     with open('data.json') as f:
