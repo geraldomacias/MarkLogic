@@ -1,18 +1,16 @@
 # services/users/project/api/views.py
-# Reviewed by Geraldo on Jan 31, 19
 
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from flask_cors import CORS
 
 from project import bcrypt, db
-from project.api.models import User, BlacklistToken
+from project.api.models import User , BlacklistToken
 
 users_blueprint = Blueprint('users', __name__)
 
 CORS(users_blueprint)
 
-# Registers a new user or checks if the user already exists
 class RegisterAPI(MethodView):
     """
     User Registration Resource
@@ -56,7 +54,6 @@ class RegisterAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 202
 
-# Logs in a user if password is valid
 class LoginAPI(MethodView):
     """
     User Login Resource
@@ -103,7 +100,6 @@ class LoginAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 500
 
-# Authorizes a user     
 class UserAPI(MethodView):
     """
     User Resource
@@ -148,7 +144,6 @@ class UserAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 401
 
-# Logs out a user
 class LogoutAPI(MethodView):
     """
     Logout Resource
