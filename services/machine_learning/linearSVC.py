@@ -5,9 +5,6 @@ import sys
 
 
 
-json.dumps(dictionary_name)
-
-
 # Open a file
 def matchSport(jsonInput):
     match = json.loads(jsonInput)
