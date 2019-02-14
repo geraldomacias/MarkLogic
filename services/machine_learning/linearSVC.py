@@ -5,110 +5,110 @@ import sys
 
 
 # Open a file
-with open (sys.argv[1]) as a:
-    input = json.load(a)
+def matchSport(jsonInput):
+    match = json.load(jsonInput)
 
-# Import json file
-with open('data.json') as f:
-    data = json.load(f)
-
-
-X = []
-Y = []
-for element in data:
-    for key in element.keys():
-        X.append(key)
-    for value in element.values():
-        Y.append(value)
+    # Import json file
+    with open('data.json') as f:
+        data = json.load(f)
 
 
-# Reshap the dataframe to be ['sport', 'col_name']
-data = pd.DataFrame(X, columns=['sport'])
-data['col'] = Y
+    X = []
+    Y = []
+    for element in data:
+        for key in element.keys():
+            X.append(key)
+        for value in element.values():
+            Y.append(value)
 
 
-# Create the Labelencoder object
-le = preprocessing.LabelEncoder()
+    # Reshap the dataframe to be ['sport', 'col_name']
+    data = pd.DataFrame(X, columns=['sport'])
+    data['col'] = Y
 
 
-# Convert the categorical columns into numeric
-encode_value = le.fit_transform(data.columns)
+    # Create the Labelencoder object
+    le = preprocessing.LabelEncoder()
 
 
-# Convert the categorical columns into numeric
-for column in data.columns:
-    data[column] = le.fit_transform(data[column])
+    # Convert the categorical columns into numeric
+    encode_value = le.fit_transform(data.columns)
 
 
-# Set the desired output into a separate dataframe
-target = data.sport
+    # Convert the categorical columns into numeric
+    for column in data.columns:
+        data[column] = le.fit_transform(data[column])
 
 
-# Remove the predictive output from the originial dataset
-data = data.col
+    # Set the desired output into a separate dataframe
+    target = data.sport
 
 
-# Reshape data
-data = data.reshape(-1, 1)
+    # Remove the predictive output from the originial dataset
+    data = data.col
 
 
-# Train test and split
-from sklearn.model_selection import train_test_split
+    # Reshape data
+    data = data.reshape(-1, 1)
 
 
-# Split data set into train and test sets
-data_train, data_test, target_train, target_test = train_test_split(data, target, test_size = 0.30, random_state = 10)
+    # Train test and split
+    from sklearn.model_selection import train_test_split
 
 
-# ## Naive Bayes
-
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import accuracy_score
+    # Split data set into train and test sets
+    data_train, data_test, target_train, target_test = train_test_split(data, target, test_size = 0.30, random_state = 10)
 
 
-# Create an object of the type GaussianNB
-gnb = GaussianNB()
+    # ## Naive Bayes
+
+    from sklearn.naive_bayes import GaussianNB
+    from sklearn.metrics import accuracy_score
 
 
-# Train the algorithm on training data and predict using the testing data
-pred = gnb.fit(data_train, target_train).predict(data_test)
+    # Create an object of the type GaussianNB
+    gnb = GaussianNB()
 
 
-# Print accuracy
-print("Naive-Bayes accuracy: ", accuracy_score(target_test, pred, normalize=True))
+    # Train the algorithm on training data and predict using the testing data
+    pred = gnb.fit(data_train, target_train).predict(data_test)
 
 
-# ## LinearSVC
-from sklearn.svm import LinearSVC
-from sklearn.metrics import accuracy_score
+    # Print accuracy
+    print("Naive-Bayes accuracy: ", accuracy_score(target_test, pred, normalize=True))
 
 
-# Create an object of the type LinearSVC
-svc_model = LinearSVC(random_state=0)
+    # ## LinearSVC
+    from sklearn.svm import LinearSVC
+    from sklearn.metrics import accuracy_score
 
 
-# Train the algorithm on training data and predict using the testing data
-pred = svc_model.fit(data_train, target_train).predict(data_test)
-
-# Print accuracy
-print("LinearSVC accuracy: ", accuracy_score(target_test, pred, normalize=True))
+    # Create an object of the type LinearSVC
+    svc_model = LinearSVC(random_state=0)
 
 
-# ## K-Neighbors Classifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
+    # Train the algorithm on training data and predict using the testing data
+    pred = svc_model.fit(data_train, target_train).predict(data_test)
+
+    # Print accuracy
+    print("LinearSVC accuracy: ", accuracy_score(target_test, pred, normalize=True))
 
 
-# Create object of the classifier
-neigh = KNeighborsClassifier(n_neighbors=3)
+    # ## K-Neighbors Classifier
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.metrics import accuracy_score
 
 
-#Train the algorithm
-neigh.fit(data_train, target_train)
+    # Create object of the classifier
+    neigh = KNeighborsClassifier(n_neighbors=3)
 
 
-# Predict the response
-pred = neigh.predict(data_test)
+    #Train the algorithm
+    neigh.fit(data_train, target_train)
 
-# Print accuracy
-print('KNeighbors accuracy score: ', accuracy_score(target_test, pred))
+
+    # Predict the response
+    pred = neigh.predict(data_test)
+
+    # Print accuracy
+    print('KNeighbors accuracy score: ', accuracy_score(target_test, pred))
