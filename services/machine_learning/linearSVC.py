@@ -1,16 +1,16 @@
 from sklearn import preprocessing
 import pandas as pd
 import json
+import sys
 
+
+# Open a file
+with open (sys.argv[1]) as a:
+    input = json.load(a)
 
 # Import json file
 with open('data.json') as f:
     data = json.load(f)
-
-
-# Load json file into pandas dataframe
-df = pd.read_json('data.json')
-df = df.fillna('')
 
 
 X = []
@@ -33,7 +33,6 @@ le = preprocessing.LabelEncoder()
 
 # Convert the categorical columns into numeric
 encode_value = le.fit_transform(data.columns)
-encode_value
 
 
 # Convert the categorical columns into numeric
