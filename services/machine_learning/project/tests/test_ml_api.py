@@ -7,7 +7,7 @@ import datetime
 import jwt
 
 from project import db 
-from project.api.models import BlacklistToken, decode_auth_token
+from project.api.models import BlacklistToken, MLStatus, decode_auth_token
 from project.tests.base import BaseTestCase
 
 from flask import current_app
@@ -145,10 +145,58 @@ class TestStartML(BaseTestCase):
             self.assertTrue(data['message'] == 'No files provided.')
             self.assertEqual(response.status_code, 400)
 
-    def test_startml(self):
-        """Test for starting ml with correct input."""
+    def test_startml_no_status(self):
+        """Test for starting ml with no status in status db."""
         with self.client:
             auth_token = encode_auth_token(1)
+            response = self.client.post(
+                '/ml/start',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                ),
+                data=json.dumps(dict(
+                    files=['file_1', 'file_2']
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully started ML on 2 files.')
+            self.assertEqual(response.status_code, 200)
+
+    def test_startml_bad_status(self):
+        """Test for starting ml with status that isn't 'Waiting for files.'"""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # set user status in db
+            status = MLStatus(1, "Processing.")
+            db.session.add(status)
+            db.session.commit()
+            # request
+            response = self.client.post(
+                '/ml/start',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                ),
+                data=json.dumps(dict(
+                    files=['file_1', 'file_2']
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Already processing files for this user.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_startml(self):
+        """Test for starting ml with correct status."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # set user status in db
+            status = MLStatus(1, "Waiting for files.")
+            db.session.add(status)
+            db.session.commit()
+            # request
             response = self.client.post(
                 '/ml/start',
                 headers=dict(
@@ -230,8 +278,8 @@ class TestStatusML(BaseTestCase):
             self.assertTrue(data['message'] == 'Signature expired. Please log in again.')
             self.assertEqual(response.status_code, 401)
 
-    def test_statusml(self):
-        """Test for ml status with correct input."""
+    def test_statusml_no_status(self):
+        """Test for ml status with no previous status."""
         with self.client:
             auth_token = encode_auth_token(1)
             response = self.client.get(
@@ -242,6 +290,25 @@ class TestStatusML(BaseTestCase):
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
-            # TODO : Make sure this message matches whatever we change it to return
-            self.assertTrue(data['message'] == 'ThE mAcHiNe MiGhT bE lEaRnInG.')
+            self.assertTrue(data['message'] == 'Waiting for files.')
+            self.assertEqual(response.status_code, 200)
+
+    def test_statusml(self):
+        """Test for ml status."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # insert ml status
+            status = MLStatus(1, "Processing.")
+            db.session.add(status)
+            db.session.commit()
+            # request
+            response = self.client.get(
+                '/ml/status',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Processing.')
             self.assertEqual(response.status_code, 200)

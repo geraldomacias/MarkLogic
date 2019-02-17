@@ -5,7 +5,7 @@ from flask.views import MethodView
 from flask_cors import CORS 
 
 from project import db 
-from project.api.models import BlacklistToken, decode_auth_token
+from project.api.models import BlacklistToken, MLStatus, decode_auth_token
 
 ml_blueprint = Blueprint('ml', __name__)
 
@@ -46,15 +46,52 @@ class MLStartAPI(MethodView):
                             'message': 'No files provided.'
                         }
                         return make_response(jsonify(responseObject)), 400
+                    # Get the current user status
+                    status = MLStatus.query.filter_by(user_id=resp).first()
+                    if not status:
+                        # User not in status table - add them now
+                        try:
+                            user = MLStatus(
+                                user_id = resp,
+                                status = "Waiting for files."
+                            )
+
+                            # insert the user
+                            db.session.add(user)
+                            db.session.commit()
+
+                            # update status object to reference newly created user
+                            status = MLStatus.query.filter_by(user_id=resp).first()
+                            if not status:
+                                responseObject = {
+                                    'status': 'fail',
+                                    'message': 'User could not be added to status database.'
+                                }
+                                return make_response(jsonify(responseObject)), 401
+                        except Exception as e:
+                            responseObject = {
+                                'status': 'fail',
+                                'message': 'Some error occurred. Please try again.'
+                            }
+                            return make_response(jsonify(responseObject)), 401
+                    # Check the user's status - make sure its "Waiting for files."
+                    if status.status == 'Waiting for files.':
+                        status.selected_files = files
+                        status.status = 'Processing.'
+                        db.session.commit()
+                        # TODO: @D3lta - Trigger your method here
                     else:
-                        for file_name in files:
-                            # TODO : Do something with these filenames (they are strings) @D3LTA
-                            print(file_name)
+                        # User is not ready for files - still processing?
                         responseObject = {
-                            'status': 'success',
-                            'message': 'Successfully started ML on ' + str(len(files)) + ' files.'
+                            'status': 'fail',
+                            'message': 'Already processing files for this user.'
                         }
-                        return make_response(jsonify(responseObject)), 200
+                        return make_response(jsonify(responseObject)), 401
+                    responseObject = {
+                        'status': 'success',
+                        'message': 'Successfully started ML on ' + str(len(files)) + ' files.'
+                    }
+                    return make_response(jsonify(responseObject)), 200
                 else:
                     responseObject = {
                         'status': 'fail',
@@ -98,10 +135,37 @@ class MLStatusAPI(MethodView):
             # Check if decode_auth_token returnned a string (which means it failed)
             # If it succeeded, resp now holds the user_id value
             if not isinstance(resp, str):
-                # TODO : Return the actual status (completed, maybe % complete?? Put this info in the 'message')
+                # Check the ml status for the user
+                status = MLStatus.query.filter_by(user_id=resp).first()
+                if not status:
+                    # User not in status table - add them now
+                    try:
+                        user = MLStatus(
+                            user_id = resp,
+                            status = "Waiting for files."
+                        )
+
+                        # insert the user
+                        db.session.add(user)
+                        db.session.commit()
+
+                        # update status object to reference newly created user
+                        status = MLStatus.query.filter_by(user_id=resp).first()
+                        if not status:
+                            responseObject = {
+                                'status': 'fail',
+                                'message': 'User could not be added to status database.'
+                            }
+                            return make_response(jsonify(responseObject)), 401
+                    except Exception as e:
+                        responseObject = {
+                            'status': 'fail',
+                            'message': 'Some error occurred. Please try again.'
+                        }
+                        return make_response(jsonify(responseObject)), 401
                 responseObject = {
                     'status': 'success',
-                    'message': 'ThE mAcHiNe MiGhT bE lEaRnInG.'
+                    'message': status.status
                 }
                 return make_response(jsonify(responseObject)), 200
             else:
