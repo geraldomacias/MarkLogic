@@ -5,9 +5,10 @@ import boto3
 from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
 from flask_cors import CORS
+import json
 
 # from project import bcrypt, db
-from project.api.models import decode_auth_token
+from project.api.models import decode_auth_token, S3Files
 
 
 s3_blueprint = Blueprint('s3', __name__)
@@ -222,8 +223,52 @@ class DownloadAPI(MethodView):
         }
         return make_response(jsonify(response_object)), 200
 
+class UploadedListAPI(MethodView):
+    """
+    Returns list of files the user has uploaded
+    """
+
+    def get(self):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                files = S3Files.query.filter_by(user_id=resp).all()
+                file_list = list()
+                for row in files:
+                    file_list.append(row.input_filename)
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Listing ' + str(len(file_list)) + ' files.',
+                    'data': file_list
+                }
+                return make_response(jsonify(responseObject)), 200
+            responseObject = {
+                'status': 'fail',
+                'message': resp
+            }
+            return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+
 upload_view = UploadAPI.as_view('upload_api')
 download_view = DownloadAPI.as_view('download_api')
+upload_list_view = UploadedListAPI.as_view('upload_list_api')
 
 s3_blueprint.add_url_rule(
     '/s3/upload',
@@ -233,6 +278,11 @@ s3_blueprint.add_url_rule(
 s3_blueprint.add_url_rule(
     '/s3/download',
     view_func=download_view,
+    methods=['GET']
+)
+s3_blueprint.add_url_rule(
+    '/s3/file_list',
+    view_func=upload_list_view,
     methods=['GET']
 )
 
