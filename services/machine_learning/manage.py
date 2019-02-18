@@ -1,4 +1,4 @@
-# services/file_system/manage.py
+# services/machine_learning/manage.py
 
 import unittest
 
@@ -9,6 +9,12 @@ from project import create_app, db
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
 
+@cli.command()
+def recreate_db():
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
+
 # add command to discover and run tests
 @cli.command()
 def test():
@@ -18,12 +24,6 @@ def test():
     if result.wasSuccessful():
         return 0
     return 1
-
-@cli.command()
-def recreate_db():
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
 
 if __name__ == '__main__':
     cli()

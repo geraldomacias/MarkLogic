@@ -4,3 +4,6 @@ env
 .DS_Store
 services/client/node_modules/
 pems/
+htmlcov/
+.coverage
+.aws/

@@ -16,11 +16,12 @@ before_install:
   - docker-compose --version
   
 before_script:
-  - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1 # new
   - docker-compose -f docker-compose-dev.yml up --build -d
 
 script:
   - docker-compose -f docker-compose-dev.yml run users pytest -v -W ignore::DeprecationWarning
+  - docker-compose -f docker-compose-dev.yml run file_system pytest -v -W ignore::DeprecationWarning
+  - docker-compose -f docker-compose-dev.yml run machine_learning pytest -v -W ignore::DeprecationWarning
 
 after_script:
   - docker-compose -f docker-compose-dev.yml down

@@ -1,4 +1,4 @@
-# services/file_system/project/__init__.py
+# services/machine_learning/project/__init__.py
 
 import os
 
@@ -13,7 +13,7 @@ def create_app(script_info=None):
 
     # instantiate the app
     app = Flask(__name__)
-    
+
     # enable CORS
     CORS(app)
 
@@ -25,12 +25,12 @@ def create_app(script_info=None):
     db.init_app(app)
 
     # register blueprints
-    from project.api.manage_s3 import s3_blueprint
-    app.register_blueprint(s3_blueprint)
+    from project.api.views import ml_blueprint
+    app.register_blueprint(ml_blueprint)
 
     # shell context for flask cli
     @app.shell_context_processor
     def ctx():
         return {'app': app, 'db': db}
-    
+
     return app

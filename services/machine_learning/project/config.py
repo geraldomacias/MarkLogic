@@ -1,4 +1,4 @@
-# services/file_system/project/config.py
+# services/machine_learning/project/config.py
 
 import os
 

@@ -15,7 +15,8 @@ services:
       - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
-      - SECRET_KEY=${CAPSTONE_SECRET_KEY:-"my_precious"}
+      - SECRET_KEY=${CAPSTONE_SECRET_KEY:-my_precious}
+      - PYTHONDONTWRITEBYTECODE=1
     depends_on:
       - users-db
 
@@ -40,17 +41,16 @@ services:
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
-
-  nginx:
-    build:
-      context: ./services/nginx
-      dockerfile: Dockerfile-dev
-    restart: always
-    ports:
-      - 80:80
+      - S3_UPLOAD=capstone.upload
+      - S3_CLASSIFIED=capstone.classified
+      - S3_STATIC=capstone.static
+      - UPLOAD_FOLDER=/home/ec2-user/MarkLogic/services/file_system/project/api/uploadFolder
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - SECRET_KEY=${CAPSTONE_SECRET_KEY:-my_precious}
+      - PYTHONDONTWRITEBYTECODE=1
     depends_on:
-      - users
-      - file_system
+      - users-db
 
   machine_learning:
     build:
@@ -59,4 +59,27 @@ services:
     volumes:
       - './services/machine_learning:/usr/src/app'
     ports:
-      - 3030:3031
+      - 5007:5000
+    environment:
+      - FLASK_ENV=development
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - SECRET_KEY=${CAPSTONE_SECRET_KEY:-my_precious}
+      - PYTHONDONTWRITEBYTECODE=1
+    depends_on:
+      - users-db
+
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-dev
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+    depends_on:
+      - users
+      - file_system
+      - machine_learning
