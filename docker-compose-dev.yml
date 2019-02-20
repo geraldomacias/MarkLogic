@@ -35,6 +35,7 @@ services:
       context: ./services/file_system
       dockerfile: Dockerfile-dev
     volumes:
+      - '~/.aws:/root/.aws:ro'
       - './services/file_system:/usr/src/app'
     ports:
       - 5005:5000
@@ -48,6 +49,10 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=${CAPSTONE_SECRET_KEY:-my_precious}
+#      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+#      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
       - PYTHONDONTWRITEBYTECODE=1
     depends_on:
       - users-db

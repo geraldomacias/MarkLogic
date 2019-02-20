@@ -65,7 +65,16 @@ class S3Files(db.Model):
     classified_filename = db.Column(db.String(128), nullable=True)
     classified_url = db.Column(db.String(128), nullable=True)
 
-    def __init__(self, user_id, input_filename, input_url):
+    def __init__(self, original_filename, user_id, input_filename, input_url, bucket_name):
         self.user_id = user_id
-        self.input_filename = input_filename
-        self.input_url = input_url
+
+        if (bucket_name == 'uploads'):
+            self.input_filename = input_filename
+            self.input_url = input_url
+        elif (bucket_name == 'classified'):
+            # Look for match in table where orig_filename = input_filename and add
+            
+            self.classified_filename = input_filename
+            self.classified_url = input_url
+        else:
+            return None 
