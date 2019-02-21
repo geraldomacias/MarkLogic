@@ -32,7 +32,7 @@ def extract_columns(auth_token, file_names) :
         r = requests.get(url = g_url, headers = g_headers, params = g_param)
         #parse data and gather column names while file is open, if valid
         file_data = r.text
-        if file_data = None:
+        if file_data == None:
             print("No valid file data found\n")
         else:
             print("File data retrieved writing to directory\n")
@@ -45,7 +45,7 @@ def extract_columns(auth_token, file_names) :
                 col_names.append(processed)
             files_with_names[f] = col_names
 
-            with open(f,mode='wb') as wFile
+            with open(f,mode='wb') as wFile:
                 wFile.write(file_data.content)
 #remove temp files after all the files are parsed
 #call G's ML stuff
