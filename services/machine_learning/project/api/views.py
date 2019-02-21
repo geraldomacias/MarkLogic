@@ -6,7 +6,7 @@ from flask_cors import CORS
 
 from project import db 
 from project.api.models import BlacklistToken, MLStatus, decode_auth_token
-from project.api.csv_parser import extract_columns
+from ..csv_parser import extract_columns
 
 from threading import Thread
 
