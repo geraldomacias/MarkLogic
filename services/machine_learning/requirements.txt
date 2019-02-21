@@ -11,3 +11,4 @@ gunicorn==19.8.1
 flask-cors==3.0.6
 PyJWT==1.7.1
 pytest==4.1.1
+pytest-cov==2.6.1

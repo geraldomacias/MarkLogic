@@ -5,6 +5,7 @@ import jwt
 import datetime
 
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import ARRAY
 
 from project import db
 
@@ -52,3 +53,18 @@ class BlacklistToken(db.Model):
             return True
         else:
             return False
+
+class MLStatus(db.Model):
+    """
+    Model for storing user ML status
+    """
+    __tablename__ = 'ml_status'
+
+    user_id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(128), nullable=False)
+    selected_files = db.Column(ARRAY(db.String(128)), nullable=True)
+    working_directory = db.Column(db.String(500), nullable=True)
+
+    def __init__(self, user_id, status):
+        self.user_id = user_id 
+        self.status = status 
