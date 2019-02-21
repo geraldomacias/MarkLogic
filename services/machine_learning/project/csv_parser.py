@@ -1,15 +1,15 @@
 import os
 import io
 import random
+import json
 from project.api.models import decode_auth_token
+from project.linearSVC import matchSport
 
 file_name_list = ["stub1", "stub2", "stub3" ]#get from s3
 #pass user ID (Auth token) and FileNames => output list of lists? dictionary?
 #need duplicates to help confidence to matching to a sport
 def extract_columns(auth_token, file_names) :
     files_with_names = {}
-
-
     cur_path = os.getcwd()
     print("The current working directory is %s\n" % cur_path)
 
@@ -47,6 +47,8 @@ def extract_columns(auth_token, file_names) :
 
             with open(f,mode='wb') as wFile:
                 wFile.write(file_data.content)
+    #call G's ML stuff
+    matchSport(json.dumps(files_with_names))
 #remove temp files after all the files are parsed
-#call G's ML stuff
+
 
