@@ -54,16 +54,12 @@ def uploads(user_id, all_files):
         db_entry['input_url'] = key_name
         
         S3Files(user_id = db_entry['user_id'],
-                original_filename = db_entry['original_filename'],
                 input_filename = db_entry['input_filename'],
                 input_url = db_entry['input_url'],
-                bucket_name = db_entry['bucket_name']
                 )
         
         db_entry['input_filename'] = ''
         db_entry['input_url'] = ''
-        db_entry['bucket_name'] = ''
-        db_entry['original_filename'] = ''
 
     uploads_response['status'] = 'success'
     uploads_response['status_code'] = 200
@@ -122,11 +118,10 @@ def classified(user_id, values, all_files):
             orig_file = request.values.get(values)
             db_entry['original_filename'] = orig_file
 
+            # TODO: Query and find which row to add to
             S3Files(user_id = db_entry['user_id'],
-                    original_filename = db_entry['original_filename'],
                     input_filename = db_entry['input_filename'],
                     input_url = db_entry['input_url'],
-                    bucket_name = db_entry['bucket_name']
                     )
 
 
