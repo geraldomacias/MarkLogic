@@ -6,6 +6,9 @@ from flask_cors import CORS
 
 from project import db 
 from project.api.models import BlacklistToken, MLStatus, decode_auth_token
+from project.csv_parser import extract_columns
+
+from threading import Thread
 
 ml_blueprint = Blueprint('ml', __name__)
 
@@ -80,6 +83,9 @@ class MLStartAPI(MethodView):
                         status.status = 'Processing.'
                         db.session.commit()
                         # TODO: @D3lta - Trigger your method here
+                        parseThread = Thread(target=extract_columns, args=(auth_token, files))
+                        parseThread.start()
+                        parseThread.join()
                     else:
                         # User is not ready for files - still processing?
                         responseObject = {
