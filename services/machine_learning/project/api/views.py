@@ -6,7 +6,9 @@ from flask_cors import CORS
 
 from project import db 
 from project.api.models import BlacklistToken, MLStatus, decode_auth_token
-from project.csv_parser import extract_columns
+from project.csv_parser import extract_columns, extract_columns
+
+from flask import current_app
 
 from threading import Thread
 
@@ -83,7 +85,7 @@ class MLStartAPI(MethodView):
                         status.status = 'Processing.'
                         db.session.commit()
                         # TODO: @D3lta - Trigger your method here
-                        parseThread = Thread(target=extract_columns, args=(auth_token, files))
+                        parseThread = Thread(target=extract_columns, args=(current_app._get_current_object(), auth_token, files))
                         parseThread.start()
                         parseThread.join()
                     else:
