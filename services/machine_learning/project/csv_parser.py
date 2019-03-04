@@ -4,10 +4,7 @@ import random
 import json
 from project.api.models import decode_auth_token, MLStatus
 from project.linearSVC import matchSport
-
 from project import db
-
-from flask import current_app
 
 file_name_list = ["stub1", "stub2", "stub3" ]#get from s3
 #pass user ID (Auth token) and FileNames => output list of lists? dictionary?
