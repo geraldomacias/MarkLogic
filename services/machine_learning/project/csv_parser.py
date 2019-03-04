@@ -14,7 +14,7 @@ def extract_columns(app, auth_token, file_names) :
     cur_path = os.getcwd()
     print("The current working directory is %s\n" % cur_path)
     #generate random number for temp csv storage folder
-    rand_file_num = random.ranint(1000, 9999)
+    rand_file_num = random.randint(1000, 9999)
     create_folder = str(rand_file_num)+ "_temp_files"
     print("Create Folder: " + create_folder + "\n")
     #create directory
