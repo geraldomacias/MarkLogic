@@ -1,1 +1,0 @@
-docker-compose -f docker-compose-dev.yml run users python manage.py recreate-db
