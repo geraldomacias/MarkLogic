@@ -2,6 +2,8 @@ import os
 import io
 import random
 import json
+import requests
+from io import StringIO
 from project.api.models import decode_auth_token, MLStatus
 from project.linearSVC import matchSport
 from project import db
@@ -27,7 +29,7 @@ def extract_columns(app, auth_token, file_names) :
 
     #download files from s3. Make a get request from s3 endpoint
     g_url = "http://file_system:5000/s3/download"
-    g_headers = {"Authorization" : 'Bearer ' + auth_token.decode()}
+    g_headers = {"Authorization" : 'Bearer ' + auth_token}
     for f in file_names:
         g_param = {"address" : f}
         r = requests.get(url = g_url, headers = g_headers, params = g_param)
@@ -38,7 +40,7 @@ def extract_columns(app, auth_token, file_names) :
         else:
             print("File data retrieved writing to directory\n")
             col_names = []
-            buf = StringIO.StringIO(file_data)
+            buf = StringIO(file_data)
             first_line = buf.readline()
             splitted = first_line.split(',')
             for word in splitted:
@@ -46,8 +48,8 @@ def extract_columns(app, auth_token, file_names) :
                 col_names.append(processed)
             files_with_names[f] = col_names
 
-            with open(f,mode='wb') as wFile:
-                wFile.write(file_data.content)
+            with open(f, 'w') as wFile:
+                wFile.write(file_data)
     #call G's ML stuff
     matchSport(json.dumps(files_with_names))
 #remove temp files after all the files are parsed
