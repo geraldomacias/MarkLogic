@@ -10,11 +10,7 @@ import sys
 # Open a file
 # Convert it to a json object
 def matchSport(jsonInput):
-    match = json.loads(jsonInput)
-
-    # Import json file
-    with open('data.json') as f:
-        data = json.load(f)
+    data = json.loads(jsonInput)
 
 
     X = []
