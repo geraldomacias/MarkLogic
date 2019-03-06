@@ -85,6 +85,7 @@ class MLStartAPI(MethodView):
                         status.status = 'Processing.'
                         db.session.commit()
                         # TODO: @D3lta - Trigger your method here
+                        print("Creating Parse Thread\n")
                         parseThread = Thread(target=extract_columns, args=(current_app._get_current_object(), auth_token, files))
                         parseThread.start()
                         parseThread.join()
