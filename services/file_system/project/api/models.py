@@ -69,3 +69,8 @@ class S3Files(db.Model):
         self.user_id = user_id
         self.input_filename = input_filename
         self.input_url = input_url
+
+    def add_classified(self, classified_name, classified_url):
+        self.classified_filename = classified_name
+        self.classified_url = classified_url
+        db.session.commit()

@@ -8,3 +8,4 @@ AWSCreds.py
 htmlcov/
 .coverage
 .aws/
+services/file_system/temporary_folder/
