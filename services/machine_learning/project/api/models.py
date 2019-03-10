@@ -6,6 +6,7 @@ import datetime
 
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import JSON
 
 from project import db
 
@@ -64,6 +65,7 @@ class MLStatus(db.Model):
     status = db.Column(db.String(128), nullable=False)
     selected_files = db.Column(ARRAY(db.String(128)), nullable=True)
     working_directory = db.Column(db.String(500), nullable=True)
+    classified_json = db.Column(JSON, nullable=True)
 
     def __init__(self, user_id, status):
         self.user_id = user_id 
