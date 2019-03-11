@@ -80,7 +80,7 @@ class MLStartAPI(MethodView):
                             }
                             return make_response(jsonify(responseObject)), 401
                     # Check the user's status - make sure its "Waiting for files."
-                    if status.status == 'Waiting for files.':
+                    if status.status == 'Waiting for files.' or status.status == 'Completed.':
                         status.selected_files = files
                         status.status = 'Processing.'
                         db.session.commit()
@@ -190,9 +190,81 @@ class MLStatusAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 401
 
+class MLGetClassifiedJson(MethodView):
+    """
+    Return Classified JSON
+    """
+
+    def get(self):
+        # get the auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            # Check if decode_auth_token returned a string (which means it failed)
+            # If it succeeded, resp now holds the user_id value
+            if not isinstance(resp, str):
+                # Get a status row for the user
+                status = MLStatus.query.filter_by(user_id=resp).first()
+                if not status:
+                    # User not in status table - error
+                    responseObject = {
+                        'status': 'fail',
+                        'message': 'User has not classified any data.'
+                    }
+                    return make_response(jsonify(responseObject)), 404
+                else:
+                    if status.status == "Completed.":
+                        # make sure row has JSON value
+                        resp_json = status.classified_json
+                        if resp_json:
+                            responseObject = {
+                                'status': 'success',
+                                'message': 'Returning classified information.',
+                                'data': resp_json
+                            }
+                            return make_response(jsonify(responseObject)), 200
+                        else:
+                            # No json object in db for user
+                            responseObject = {
+                                'status': 'fail',
+                                'message': 'No classified data found for given user.'
+                            }
+                            return make_response(jsonify(responseObject)), 404
+                    else:
+                        # ML has not yet completed for user
+                        responseObject = {
+                            'status': 'fail',
+                            'message': 'Classification not yet completed for given user. Current status: ' + status.status
+                        }
+                        return make_response(jsonify(responseObject)), 401
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+
 # Define the API resources
 ml_start_view = MLStartAPI.as_view('startml_api')
 ml_status_view = MLStatusAPI.as_view('statusml_api')
+ml_get_classified_view = MLGetClassifiedJson.as_view('getclassified_api')
 
 # Add rules for API endpoints
 ml_blueprint.add_url_rule(
@@ -203,5 +275,10 @@ ml_blueprint.add_url_rule(
 ml_blueprint.add_url_rule(
     '/ml/status',
     view_func=ml_status_view,
+    methods=['GET']
+)
+ml_blueprint.add_url_rule(
+    '/ml/classified',
+    view_func=ml_get_classified_view,
     methods=['GET']
 )
