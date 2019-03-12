@@ -258,10 +258,10 @@ def downloadUploaded(user_id, values):
             orig_list.append(row.input_filename)
 
         for orig_file in orig_list:
-            responseObject[value] = orig_file
+            responseObject[orig_file] = orig_file
             key_name = orig_file + '.' + user_id + '.' + file_type
-            responseObject[value + '_download_url'] = (download_url + key_name).replace(" ", "+")
-            responseObject[value + '_key_name'] = key_name
+            responseObject[orig_file + '_download_url'] = (download_url + key_name).replace(" ", "+")
+            responseObject[orig_file + '_key_name'] = key_name
 
     else:
         for value in values:
