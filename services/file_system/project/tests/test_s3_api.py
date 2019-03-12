@@ -147,5 +147,5 @@ class TestUploadedFiles(BaseTestCase):
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Listing 2 files.')
             self.assertTrue(len(data['data']) == 2)
-            self.assertTrue(data['data'][0] == 'file1')
-            self.assertTrue(data['data'][1] == 'file2')
+            self.assertTrue(data['data'][0]['file_names'] == 'file1')
+            self.assertTrue(data['data'][1]['file_names'] == 'file2')

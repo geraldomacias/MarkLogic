@@ -411,13 +411,16 @@ class UploadedListAPI(MethodView):
             resp = decode_auth_token(auth_token)
             if not isinstance(resp, str):
                 files = S3Files.query.filter_by(user_id=resp).all()
-                file_list = list()
+                file_names = list()
+                file_links = list()
                 for row in files:
-                    file_list.append(row.input_filename)
+                    file_names.append(row.input_filename)
+                    file_links.append(row.input_url)
+                file_json = [{"file_names": n, "file_links": l} for n, l in zip(file_names, file_links)]
                 responseObject = {
                     'status': 'success',
-                    'message': 'Listing ' + str(len(file_list)) + ' files.',
-                    'data': file_list
+                    'message': 'Listing ' + str(len(file_json)) + ' files.',
+                    'data': file_json
                 }
                 return make_response(jsonify(responseObject)), 200
             responseObject = {
