@@ -1,4 +1,6 @@
 # services/file_system/project/api/manage_s3.py
+    #from project.api.upload_s3 import s3_upload_blueprint
+    #app.register_blueprint(s3_upload_blueprint)
 
 import os
 import boto3
@@ -75,6 +77,7 @@ def uploads(user_id, all_files):
     bucket_name = os.getenv('S3_UPLOAD')
     file_type = "uploads"
     uploads_response['bucket'] = bucket_name
+    download_url = "https://s3-us-west-2.amazonaws.com/capstone.upload/"
 
     for files in all_files:
         cur_file = all_files[files]
@@ -93,13 +96,13 @@ def uploads(user_id, all_files):
             Key=key_name
         )
 
-        uploads_response[files + "_URL"] = key_name
+        uploads_response[files + "_URL"] = (download_url + key_name).replace(" ", "+")
         uploads_response[files] = cur_name
         
         new_row = S3Files(
             user_id = user_id,
             input_filename = cur_name,
-            input_url = key_name
+            input_url = (download_url + key_name).replace(" ", "+")
         )
 
         db.session.add(new_row)
@@ -123,6 +126,7 @@ def classified(user_id, values, all_files):
     bucket_name = os.getenv('S3_CLASSIFIED')
     file_type = "classified"
     classified_response['bucket'] = bucket_name
+    download_url = "https://s3-us-west-2.amazonaws.com/capstone.classified/"
 
     classified_name = ""
     classified_key = ""
@@ -151,17 +155,17 @@ def classified(user_id, values, all_files):
             Key=key_name
         )
 
-        classified_response[files + "_URL"] = key_name
+        classified_response[files + "_URL"] = (download_url + key_name).replace(" ", "+")
         classified_response[files] = cur_name
         
         classified_name = cur_name
-        classified_key = key_name
+        classified_url = (download_url + key_name).replace(" ", "+")
         
 
     for values in request.values:
         orig_file = request.values.get(values)
         current = S3Files.query.filter_by(input_filename = orig_file).first()
-        current.add_classified(classified_name, classified_key)
+        current.add_classified(classified_name, classified_url)
 
 
     classified_response['status'] = 'success'
