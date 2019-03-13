@@ -16,7 +16,7 @@ def extract_columns(app, auth_token, file_names) :
     #generate random number for temp csv storage folder
     rand_file_num = random.randint(1000, 9999)
     create_folder = str(rand_file_num)+ "_temp_files/"
-    print("Create Folder: " + create_folder + "\n")
+    #print("Create Folder: " + create_folder + "\n")
     abs_path = "/temp/" + create_folder
     #create directory
     try:
@@ -24,7 +24,7 @@ def extract_columns(app, auth_token, file_names) :
     except OSError:
         print ("Creation of the directory %s failed\n" % create_folder)
     else:
-        print ("Successfully created the directory, adding it to the db %s\n" % create_folder)
+        #print ("Successfully created the directory, adding it to the db %s\n" % create_folder)
         insert_cwd(app, auth_token, abs_path)
 
     #download files from s3. Make a get request from s3 endpoint
@@ -46,15 +46,15 @@ def extract_columns(app, auth_token, file_names) :
         if file_data == None:
             print("No valid file data found\n")
         else:
-            print("File data retrieved writing to directory\n")
+            #print("File data retrieved writing to directory\n")
             col_names = []
             buf = StringIO(file_data)
             first_line = buf.readline()
             splitted = first_line.split(',')
             for word in splitted:
                 processed = (word.strip()).lower()
-                print("processed column name: " + processed)
-                print("blah", flush= True)
+                #print("processed column name: " + processed)
+                #print("blah", flush= True)
                 col_names.append(processed)
             file_with_names[f] = col_names
 
