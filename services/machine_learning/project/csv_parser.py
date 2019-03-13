@@ -57,32 +57,9 @@ def extract_columns(app, auth_token, file_names) :
                 #print("blah", flush= True)
                 col_names.append(processed)
             file_with_names[f] = col_names
-
             write_file_loc = abs_path + f
             with open(write_file_loc, 'w') as wFile:
                 wFile.write(file_data)
-    """
-    for f in file_names:
-        g_param = {"address" : f}
-        r = requests.get(url = g_url, headers = g_headers, params = g_param)
-        #parse data and gather column names while file is open, if valid
-        file_data = r.text
-        if file_data == None:
-            print("No valid file data found\n")
-        else:
-            print("File data retrieved writing to directory\n")
-            col_names = []
-            buf = StringIO(file_data)
-            first_line = buf.readline()
-            splitted = first_line.split(',')
-            for word in splitted:
-                processed = (word.strip()).lower()
-                col_names.append(processed)
-            files_with_names[f] = col_names
-
-            with open(f, 'w') as wFile:
-                wFile.write(file_data)
-    """
     #call G's ML stuff
     matchSport(json.dumps(file_with_names), auth_token, app)
 #remove temp files after all the files are parsed
