@@ -84,7 +84,7 @@ def extract_columns(app, auth_token, file_names) :
                 wFile.write(file_data)
     """
     #call G's ML stuff
-    #matchSport(json.dumps(file_with_names), auth_token, app)
+    matchSport(json.dumps(file_with_names), auth_token, app)
 #remove temp files after all the files are parsed
 
 def insert_cwd(app, auth_token, cwd):
