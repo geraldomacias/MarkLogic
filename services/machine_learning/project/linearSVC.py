@@ -132,8 +132,22 @@ def matchSport(jsonInput, auth_token, app):
     # append a sport column with the predicted sport
     df['sport'] = predicted_sport
 
+    # Formatting for player cards
+    rows = df.shape[0]
+    columns = df.columns
+    players = []
+    tp = df.id.dtypes
+    for i in range(rows):
+        player = {}
+        for col in columns:
+            if type(df.loc[i][col]) == tp:
+                player[col] = int(df.loc[i][col])
+            else:
+                player[col] = df.loc[i][col]
+        players.append(player)
+
     # save the dataframe into a json object
-    json_frame = df.to_json()
+    json_frame = json.dumps(players)
 
     # Save the classified file to the cwd
     filepath = cwd + '/' + 'classified.json'
@@ -168,7 +182,7 @@ def jake_point(files, values, auth_token):
 def get_values(auth_token, app):
     with app.app_context():
         resp = decode_auth_token(auth_token)
-        if isinstance(resp):
+        if isinstance(resp, str):
             # Auth token invalid
             print(resp, flush=True)
         # Is a user_id
@@ -178,7 +192,6 @@ def get_values(auth_token, app):
             print('Cannot find user in the status DB')
         # Return the selected files from the user
         return row.selected_files;
-
 
 # Retrieves current working directory from the db
 def get_cwd(auth_token, app):
