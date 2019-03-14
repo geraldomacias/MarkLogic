@@ -1,0 +1,101 @@
+id,first_name,last_name,player_number,team_name,player_position,home_runs,batting_average,height_inches
+1,Goober,Pickthorn,29,Tufts University,process improvement,723,0.209,54
+2,Artemis,Seifenmacher,26,Universidad San Francisco Xavier de Chuquisaca,Future-proofed,206,0.846,68
+3,Juliane,Colter,80,Imam Khomeini International University,instruction set,68,0.475,69
+4,Trina,Cartman,91,Zhetysu State University ,forecast,501,0.501,76
+5,Kiel,Linggard,7,University of Hormozgan,background,840,0.677,55
+6,Sylas,Seller,8,Atilim University,encryption,849,0.215,76
+7,Joelle,Relph,9,Upper Iowa University,clear-thinking,430,0.513,79
+8,Lucais,Birley,89,Institut Catholique de Toulouse,throughput,82,0.661,57
+9,Jonah,Cossom,42,Ohio University - Chillicothe,zero tolerance,897,0.807,63
+10,Morgana,Dayton,76,West Virginia University Institute of Technology,Multi-layered,854,0.009,61
+11,Armin,Dowrey,53,Universidad Autónoma de Ciudad Juárez,Business-focused,595,0.153,51
+12,Haily,Warkup,91,Université Française d'Égypte,Face to face,401,0.939,58
+13,Griffy,Odhams,56,University of Southern Maine,directional,396,0.923,56
+14,Chrystal,Skaife d'Ingerthorpe,54,International Medical & Technological University,Implemented,262,0.661,80
+15,Janie,Sessuns,64,University of Ulster,actuating,332,0.023,66
+16,Poul,Bifield,18,German Jordanian University,Persistent,153,0.153,55
+17,Milt,Btham,18,Fachhochschule Brandenburg,4th generation,575,0.572,58
+18,Mair,Robotham,79,Beijing Sport University,Managed,724,0.712,51
+19,Amargo,Wadworth,14,"Islamic Azad University, Ardabil",Centralized,366,0.361,60
+20,Bernadina,Runciman,50,Hellenic Army Academy,service-desk,130,0.536,55
+21,Perla,Smalls,80,Chongju National University of Education,Reactive,925,0.196,50
+22,Antonina,Tupie,85,Ecole Supérieure de Commerce de Paris,24 hour,493,0.545,56
+23,Marylee,Galland,94,University of Maastricht,function,742,0.764,66
+24,Brinn,Tuohy,97,"Fachhochschule Mannheim, Hochschule für Sozialwesen",uniform,212,0.767,68
+25,Feodor,Dunican,26,Jilin Agricultural University,circuit,841,0.438,72
+26,Lynne,MacIver,40,Ecole Nationale Supérieur de Géologie de Nancy,Business-focused,413,0.111,61
+27,Pryce,Kinnerley,76,Altai State Medical University,didactic,125,0.024,67
+28,Base,Cornelisse,10,Kaya University,Innovative,854,0.17,57
+29,Raul,Wandtke,33,Université de Sétif,Configurable,197,0.508,50
+30,Rikki,Gage,86,Thomas University,directional,512,0.828,69
+31,Ron,Krolak,58,Hilbert College,Monitored,725,0.786,80
+32,Patricio,Matieu,37,Espam Formation University,success,813,0.398,56
+33,Debra,Fennell,76,Oklahoma Baptist University,Re-engineered,454,0.32,69
+34,Karia,ffrench Beytagh,49,National Sanskrit University,intranet,493,0.523,80
+35,Reuben,Pimley,1,Arhangelsk State Technical University,explicit,267,0.292,59
+36,Noe,Vigours,99,MGH Institute of Health Professions,matrices,413,0.045,61
+37,Tyler,Mityushin,88,Payap University Chaiang Mai,tangible,781,0.773,77
+38,Manon,Allsopp,47,John Marshall Law School,policy,389,0.769,52
+39,Harp,Lovejoy,80,Queen's University,composite,666,0.132,76
+40,Eddy,Wolfenden,35,University of Genoa,support,168,0.132,65
+41,Kris,Vaines,56,Centro de Estudios Universitarios Monterrey,empowering,896,0.732,65
+42,Elisabet,Seldner,80,Newberry College,Balanced,160,0.769,53
+43,Clifford,Mitchard,74,University of NorthWest,frame,847,0.511,58
+44,Wilfrid,Metcalf,78,Universidad Metropolitana,24/7,388,0.422,56
+45,Paten,Rillstone,97,Technological Education Institute of Kavala,high-level,612,0.433,58
+46,Ursola,Gosling,58,Knightsbridge University,Progressive,226,0.402,51
+47,Avrom,Bainton,58,"Kazakhstan Institute of Management, Economics, and Strategic Research",tangible,771,0.814,63
+48,Levy,Phette,37,Maxim Gorky Institute of Literature,client-server,327,0.09,79
+49,Dorita,Sears,100,Université Thierno Amadou Diallo,analyzer,496,0.542,55
+50,Elston,Roycroft,86,Tarim University,time-frame,272,0.519,67
+51,Adore,Brann,7,Institut National Polytechnique de Grenoble,Seamless,315,0.715,67
+52,Ulrica,Pomeroy,22,Universitas Krisnadwipayana,interface,539,0.418,50
+53,Lira,Skarman,22,Pacific University,service-desk,244,0.774,75
+54,Ariel,Twinbourne,75,Indian School of Mines (ISM),multi-tasking,431,0.542,79
+55,Kristien,Fossey,60,Balqa Applied University,Intuitive,706,0.63,50
+56,Rosaline,Leach,81,Cross River University of Science and Technology,motivating,738,0.929,54
+57,Elspeth,Hansard,86,Lazarski School of Commerce and Law,conglomeration,753,0.32,70
+58,Meggi,Kruse,16,"Institute of Teachers Education, Tun Hussein Onn",productivity,720,0.118,68
+59,Rheta,Autrie,97,University of North London,attitude-oriented,540,0.029,67
+60,Halette,Ivy,69,Sagami Women's University,local area network,751,0.863,71
+61,Flinn,Tate,59,Seberang Perai Polytechnic,intranet,660,0.797,55
+62,Osgood,Amphlett,94,Philadelphia University,Cloned,797,0.85,67
+63,Hannis,McNish,77,Egerton University,coherent,804,0.18,55
+64,Binnie,Brannigan,72,Universidade Federal da Grande Dourados,multi-state,66,0.621,77
+65,Elianora,Pahler,29,Elmira College,secured line,716,0.666,64
+66,Lisette,Shory,64,Tianjin University,Front-line,253,0.469,61
+67,Austin,Teml,60,Osmangazi University,info-mediaries,692,0.386,58
+68,Jed,Portriss,13,Brac University,success,311,0.743,73
+69,Tamqrah,Goldsby,95,Hochschule Bremen,strategy,805,0.559,73
+70,Bellina,Wetwood,94,Universidad Francisco de Vitoria,Reverse-engineered,150,0.094,59
+71,Celle,Lindell,51,Ecole Nationale Supérieur de Géologie de Nancy,Re-contextualized,941,0.715,66
+72,Charlie,Yurin,8,University of Nebraska - Lincoln,definition,899,0.704,70
+73,Ricard,Mellor,79,National Aviation Univesity,circuit,51,0.32,56
+74,Elfie,Iglesias,8,University of San Agustin,discrete,381,0.925,61
+75,Josefa,Edgeson,1,Tallinn University of Technology,Reactive,779,0.442,75
+76,Imogene,Farrier,1,Koc University,complexity,689,0.524,66
+77,Lyell,Kelk,8,Fine Arts Academy in Katowice,Down-sized,558,0.495,63
+78,Laurena,Gravenall,46,Indian Institute of Science,Innovative,176,0.432,50
+79,Miran,Rennebach,46,Hue University of Agriculture and Forestry ,info-mediaries,134,0.406,52
+80,Elisabet,Bowlands,53,Tampere Polytechnic,success,887,0.778,59
+81,Kirby,Pring,19,Technological University (Pakokku),Multi-channelled,593,0.166,63
+82,Adriano,Tison,26,University of Hawaii - Hilo,Upgradable,576,0.857,76
+83,Carlin,Kenrick,69,Lead City University of Ibadan,extranet,899,0.204,79
+84,Jeni,Portigall,60,Rangsit University,Multi-channelled,309,0.58,71
+85,Cori,Latore,17,Washington University in St. Louis,composite,455,0.623,80
+86,Charmaine,Curteis,9,"Dr. Hari Singh Gour University, formerly University of Sagar",Triple-buffered,257,0.038,74
+87,Jimmie,Zolini,40,Universidad de la Cuenca del Plata,structure,789,0.456,68
+88,Sharia,Idiens,16,Hanshin University,matrices,294,0.888,68
+89,Jojo,Burt,44,Hochschule Bremerhaven,architecture,929,0.724,78
+90,Babbette,Licari,24,Universidad Catolica de La Santísima Concepción,asynchronous,705,0.835,53
+91,Otes,Giacopelo,83,Nugaal University,Monitored,105,0.678,79
+92,Alec,Mullaly,80,Latvian Academy of Sports Education,hybrid,55,0.086,72
+93,Clio,Wahncke,85,Donetsk National Technical University,customer loyalty,407,0.265,50
+94,Minne,McTrustey,35,Tibet University of Nationalities,needs-based,909,0.413,61
+95,Stafani,Leinthall,90,University of Delhi,bifurcated,974,0.779,57
+96,Sheree,Rainton,27,Hokkaido University of Health Sciences,demand-driven,805,0.935,78
+97,Kathye,Bosomworth,43,Emerson College,Open-source,477,0.918,56
+98,Chester,Notley,79,Kanto Gakuen University,high-level,41,0.071,59
+99,Teriann,Andryushin,98,Seiwa College,Team-oriented,45,0.181,65
+100,Winonah,Humburton,52,University Medical School of Debrecen,Team-oriented,319,0.816,76

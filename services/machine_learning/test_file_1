@@ -1,0 +1,393 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>TypeError: can only concatenate str (not &quot;NoneType&quot;) to str // Werkzeug Debugger</title>
+    <link rel="stylesheet" href="?__debugger__=yes&amp;cmd=resource&amp;f=style.css"
+        type="text/css">
+    <!-- We need to make sure this has a favicon so that the debugger does
+         not by accident trigger a request to /favicon.ico which might
+         change the application state. -->
+    <link rel="shortcut icon"
+        href="?__debugger__=yes&amp;cmd=resource&amp;f=console.png">
+    <script src="?__debugger__=yes&amp;cmd=resource&amp;f=jquery.js"></script>
+    <script src="?__debugger__=yes&amp;cmd=resource&amp;f=debugger.js"></script>
+    <script type="text/javascript">
+      var TRACEBACK = 140548167615096,
+          CONSOLE_MODE = false,
+          EVALEX = true,
+          EVALEX_TRUSTED = false,
+          SECRET = "YOLJEUaWWWHLPeGZ2VQ1";
+    </script>
+  </head>
+  <body style="background-color: #fff">
+    <div class="debugger">
+<h1>builtins.TypeError</h1>
+<div class="detail">
+  <p class="errormsg">TypeError: can only concatenate str (not &quot;NoneType&quot;) to str</p>
+</div>
+<h2 class="traceback">Traceback <em>(most recent call last)</em></h2>
+<div class="traceback">
+  
+  <ul><li><div class="frame" id="frame-140548267707640">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">2309</em>,
+      in <code class="function">__call__</code></h4>
+  <div class="source"><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def __call__(self, environ, start_response):</pre>
+<pre class="line before"><span class="ws">        </span>&quot;&quot;&quot;The WSGI server calls the Flask application object as the</pre>
+<pre class="line before"><span class="ws">        </span>WSGI application. This calls :meth:`wsgi_app` which can be</pre>
+<pre class="line before"><span class="ws">        </span>wrapped to applying middleware.&quot;&quot;&quot;</pre>
+<pre class="line current"><span class="ws">        </span>return self.wsgi_app(environ, start_response)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def __repr__(self):</pre>
+<pre class="line after"><span class="ws">        </span>return '&lt;%s %r&gt;' % (</pre>
+<pre class="line after"><span class="ws">            </span>self.__class__.__name__,</pre>
+<pre class="line after"><span class="ws">            </span>self.name,</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167313896">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">2295</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>ctx.push()</pre>
+<pre class="line before"><span class="ws">                </span>response = self.full_dispatch_request()</pre>
+<pre class="line before"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line before"><span class="ws">                </span>error = e</pre>
+<pre class="line current"><span class="ws">                </span>response = self.handle_exception(e)</pre>
+<pre class="line after"><span class="ws">            </span>except:</pre>
+<pre class="line after"><span class="ws">                </span>error = sys.exc_info()[1]</pre>
+<pre class="line after"><span class="ws">                </span>raise</pre>
+<pre class="line after"><span class="ws">            </span>return response(environ, start_response)</pre>
+<pre class="line after"><span class="ws">        </span>finally:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167313952">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask_cors/extension.py"</cite>,
+      line <em class="line">161</em>,
+      in <code class="function">wrapped_function</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span># Wrap exception handlers with cross_origin</pre>
+<pre class="line before"><span class="ws">        </span># These error handlers will still respect the behavior of the route</pre>
+<pre class="line before"><span class="ws">        </span>if options.get('intercept_exceptions', True):</pre>
+<pre class="line before"><span class="ws">            </span>def _after_request_decorator(f):</pre>
+<pre class="line before"><span class="ws">                </span>def wrapped_function(*args, **kwargs):</pre>
+<pre class="line current"><span class="ws">                    </span>return cors_after_request(app.make_response(f(*args, **kwargs)))</pre>
+<pre class="line after"><span class="ws">                </span>return wrapped_function</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">            </span>if hasattr(app, 'handle_exception'):</pre>
+<pre class="line after"><span class="ws">                </span>app.handle_exception = _after_request_decorator(</pre>
+<pre class="line after"><span class="ws">                    </span>app.handle_exception)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167313168">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">1741</em>,
+      in <code class="function">handle_exception</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">            </span># if we want to repropagate the exception, we can attempt to</pre>
+<pre class="line before"><span class="ws">            </span># raise it with the whole traceback in case we can do that</pre>
+<pre class="line before"><span class="ws">            </span># (the function was actually called from the except part)</pre>
+<pre class="line before"><span class="ws">            </span># otherwise, we just raise the error again</pre>
+<pre class="line before"><span class="ws">            </span>if exc_value is e:</pre>
+<pre class="line current"><span class="ws">                </span>reraise(exc_type, exc_value, tb)</pre>
+<pre class="line after"><span class="ws">            </span>else:</pre>
+<pre class="line after"><span class="ws">                </span>raise e</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">        </span>self.log_exception((exc_type, exc_value, tb))</pre>
+<pre class="line after"><span class="ws">        </span>if handler is None:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314064">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/_compat.py"</cite>,
+      line <em class="line">35</em>,
+      in <code class="function">reraise</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">    </span>from io import StringIO</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def reraise(tp, value, tb=None):</pre>
+<pre class="line before"><span class="ws">        </span>if value.__traceback__ is not tb:</pre>
+<pre class="line before"><span class="ws">            </span>raise value.with_traceback(tb)</pre>
+<pre class="line current"><span class="ws">        </span>raise value</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>implements_to_string = _identity</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>else:</pre>
+<pre class="line after"><span class="ws">    </span>text_type = unicode</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314008">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">2292</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>ctx = self.request_context(environ)</pre>
+<pre class="line before"><span class="ws">        </span>error = None</pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>ctx.push()</pre>
+<pre class="line current"><span class="ws">                </span>response = self.full_dispatch_request()</pre>
+<pre class="line after"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">                </span>error = e</pre>
+<pre class="line after"><span class="ws">                </span>response = self.handle_exception(e)</pre>
+<pre class="line after"><span class="ws">            </span>except:</pre>
+<pre class="line after"><span class="ws">                </span>error = sys.exc_info()[1]</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314176">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">1815</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">            </span>request_started.send(self)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line before"><span class="ws">                </span>rv = self.dispatch_request()</pre>
+<pre class="line before"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line current"><span class="ws">            </span>rv = self.handle_user_exception(e)</pre>
+<pre class="line after"><span class="ws">        </span>return self.finalize_request(rv)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def finalize_request(self, rv, from_error_handler=False):</pre>
+<pre class="line after"><span class="ws">        </span>&quot;&quot;&quot;Given the return value from a view function this finalizes</pre>
+<pre class="line after"><span class="ws">        </span>the request by converting it into a response and invoking the</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314232">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask_cors/extension.py"</cite>,
+      line <em class="line">161</em>,
+      in <code class="function">wrapped_function</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span># Wrap exception handlers with cross_origin</pre>
+<pre class="line before"><span class="ws">        </span># These error handlers will still respect the behavior of the route</pre>
+<pre class="line before"><span class="ws">        </span>if options.get('intercept_exceptions', True):</pre>
+<pre class="line before"><span class="ws">            </span>def _after_request_decorator(f):</pre>
+<pre class="line before"><span class="ws">                </span>def wrapped_function(*args, **kwargs):</pre>
+<pre class="line current"><span class="ws">                    </span>return cors_after_request(app.make_response(f(*args, **kwargs)))</pre>
+<pre class="line after"><span class="ws">                </span>return wrapped_function</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">            </span>if hasattr(app, 'handle_exception'):</pre>
+<pre class="line after"><span class="ws">                </span>app.handle_exception = _after_request_decorator(</pre>
+<pre class="line after"><span class="ws">                    </span>app.handle_exception)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314120">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">1718</em>,
+      in <code class="function">handle_user_exception</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">            </span>return self.handle_http_exception(e)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">        </span>handler = self._find_error_handler(e)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">        </span>if handler is None:</pre>
+<pre class="line current"><span class="ws">            </span>reraise(exc_type, exc_value, tb)</pre>
+<pre class="line after"><span class="ws">        </span>return handler(e)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def handle_exception(self, e):</pre>
+<pre class="line after"><span class="ws">        </span>&quot;&quot;&quot;Default exception handling that kicks in when an exception</pre>
+<pre class="line after"><span class="ws">        </span>occurs that is not caught.  In debug mode the exception will</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314344">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/_compat.py"</cite>,
+      line <em class="line">35</em>,
+      in <code class="function">reraise</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">    </span>from io import StringIO</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def reraise(tp, value, tb=None):</pre>
+<pre class="line before"><span class="ws">        </span>if value.__traceback__ is not tb:</pre>
+<pre class="line before"><span class="ws">            </span>raise value.with_traceback(tb)</pre>
+<pre class="line current"><span class="ws">        </span>raise value</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>implements_to_string = _identity</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>else:</pre>
+<pre class="line after"><span class="ws">    </span>text_type = unicode</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314288">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">1813</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>self.try_trigger_before_first_request_functions()</pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>request_started.send(self)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line current"><span class="ws">                </span>rv = self.dispatch_request()</pre>
+<pre class="line after"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">            </span>rv = self.handle_user_exception(e)</pre>
+<pre class="line after"><span class="ws">        </span>return self.finalize_request(rv)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def finalize_request(self, rv, from_error_handler=False):</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314456">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/app.py"</cite>,
+      line <em class="line">1799</em>,
+      in <code class="function">dispatch_request</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span># request came with the OPTIONS method, reply automatically</pre>
+<pre class="line before"><span class="ws">        </span>if getattr(rule, 'provide_automatic_options', False) \</pre>
+<pre class="line before"><span class="ws">           </span>and req.method == 'OPTIONS':</pre>
+<pre class="line before"><span class="ws">            </span>return self.make_default_options_response()</pre>
+<pre class="line before"><span class="ws">        </span># otherwise dispatch to the handler for that endpoint</pre>
+<pre class="line current"><span class="ws">        </span>return self.view_functions[rule.endpoint](**req.view_args)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def full_dispatch_request(self):</pre>
+<pre class="line after"><span class="ws">        </span>&quot;&quot;&quot;Dispatches the request and on top of that performs request</pre>
+<pre class="line after"><span class="ws">        </span>pre and postprocessing as well as HTTP exception catching and</pre>
+<pre class="line after"><span class="ws">        </span>error handling.</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167314512">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/views.py"</cite>,
+      line <em class="line">88</em>,
+      in <code class="function">view</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>The arguments passed to :meth:`as_view` are forwarded to the</pre>
+<pre class="line before"><span class="ws">        </span>constructor of the class.</pre>
+<pre class="line before"><span class="ws">        </span>&quot;&quot;&quot;</pre>
+<pre class="line before"><span class="ws">        </span>def view(*args, **kwargs):</pre>
+<pre class="line before"><span class="ws">            </span>self = view.view_class(*class_args, **class_kwargs)</pre>
+<pre class="line current"><span class="ws">            </span>return self.dispatch_request(*args, **kwargs)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">        </span>if cls.decorators:</pre>
+<pre class="line after"><span class="ws">            </span>view.__name__ = name</pre>
+<pre class="line after"><span class="ws">            </span>view.__module__ = cls.__module__</pre>
+<pre class="line after"><span class="ws">            </span>for decorator in cls.decorators:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167313112">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.7/site-packages/flask/views.py"</cite>,
+      line <em class="line">158</em>,
+      in <code class="function">dispatch_request</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span># retry with GET.</pre>
+<pre class="line before"><span class="ws">        </span>if meth is None and request.method == 'HEAD':</pre>
+<pre class="line before"><span class="ws">            </span>meth = getattr(self, 'get', None)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">        </span>assert meth is not None, 'Unimplemented method %r' % request.method</pre>
+<pre class="line current"><span class="ws">        </span>return meth(*args, **kwargs)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-140548167313840">
+  <h4>File <cite class="filename">"/usr/src/app/project/api/manage_s3.py"</cite>,
+      line <em class="line">261</em>,
+      in <code class="function">get</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>elif (request.values.get('bucket_name') == 'classified'):</pre>
+<pre class="line before"><span class="ws">            </span>bucket_name = os.getenv('S3_CLASSIFIED')</pre>
+<pre class="line before"><span class="ws">            </span>file_type = &quot;classified&quot;</pre>
+<pre class="line before"><span class="ws">            </span>download_url = &quot;https://s3-us-west-2.amazonaws.com/capstone.classified/&quot;</pre>
+<pre class="line before"><span class="ws">        </span>else:</pre>
+<pre class="line current"><span class="ws">            </span>responseObject['message'] = &quot;passed: &quot; + request.values.get('bucket_name')</pre>
+<pre class="line after"><span class="ws">            </span>return make_response(jsonify(responseObject)), 401</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">        </span>if (&quot;classified_filename&quot; in request.values) and (file_type == &quot;classified&quot;): # Given classified, get all orig files</pre>
+<pre class="line after"><span class="ws">            </span>orig_file_list = [] # orig_filenames</pre>
+<pre class="line after"><span class="ws">            </span>orig_file_type = &quot;uploads&quot;</pre></div>
+</div>
+</ul>
+  <blockquote>TypeError: can only concatenate str (not &quot;NoneType&quot;) to str</blockquote>
+</div>
+
+<div class="plain">
+  <form action="/?__debugger__=yes&amp;cmd=paste" method="post">
+    <p>
+      <input type="hidden" name="language" value="pytb">
+      This is the Copy/Paste friendly version of the traceback.  <span
+      class="pastemessage">You can also paste this traceback into
+      a <a href="https://gist.github.com/">gist</a>:
+      <input type="submit" value="create paste"></span>
+    </p>
+    <textarea cols="50" rows="10" name="code" readonly>Traceback (most recent call last):
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 2309, in __call__
+    return self.wsgi_app(environ, start_response)
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 2295, in wsgi_app
+    response = self.handle_exception(e)
+  File &quot;/usr/local/lib/python3.7/site-packages/flask_cors/extension.py&quot;, line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 1741, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/_compat.py&quot;, line 35, in reraise
+    raise value
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File &quot;/usr/local/lib/python3.7/site-packages/flask_cors/extension.py&quot;, line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/_compat.py&quot;, line 35, in reraise
+    raise value
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/app.py&quot;, line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/views.py&quot;, line 88, in view
+    return self.dispatch_request(*args, **kwargs)
+  File &quot;/usr/local/lib/python3.7/site-packages/flask/views.py&quot;, line 158, in dispatch_request
+    return meth(*args, **kwargs)
+  File &quot;/usr/src/app/project/api/manage_s3.py&quot;, line 261, in get
+    responseObject['message'] = &quot;passed: &quot; + request.values.get('bucket_name')
+TypeError: can only concatenate str (not &quot;NoneType&quot;) to str</textarea>
+  </form>
+</div>
+<div class="explanation">
+  The debugger caught an exception in your WSGI application.  You can now
+  look at the traceback which led to the error.  <span class="nojavascript">
+  If you enable JavaScript you can also use additional features such as code
+  execution (if the evalex feature is enabled), automatic pasting of the
+  exceptions and much more.</span>
+</div>
+      <div class="footer">
+        Brought to you by <strong class="arthur">DON'T PANIC</strong>, your
+        friendly Werkzeug powered traceback interpreter.
+      </div>
+    </div>
+
+    <div class="pin-prompt">
+      <div class="inner">
+        <h3>Console Locked</h3>
+        <p>
+          The console is locked and needs to be unlocked by entering the PIN.
+          You can find the PIN printed out on the standard output of your
+          shell that runs the server.
+        <form>
+          <p>PIN:
+            <input type=text name=pin size=14>
+            <input type=submit name=btn value="Confirm Pin">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!--
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 2309, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 2295, in wsgi_app
+    response = self.handle_exception(e)
+  File "/usr/local/lib/python3.7/site-packages/flask_cors/extension.py", line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 1741, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.7/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.7/site-packages/flask_cors/extension.py", line 161, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.7/site-packages/flask/_compat.py", line 35, in reraise
+    raise value
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.7/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/usr/local/lib/python3.7/site-packages/flask/views.py", line 88, in view
+    return self.dispatch_request(*args, **kwargs)
+  File "/usr/local/lib/python3.7/site-packages/flask/views.py", line 158, in dispatch_request
+    return meth(*args, **kwargs)
+  File "/usr/src/app/project/api/manage_s3.py", line 261, in get
+    responseObject['message'] = "passed: " + request.values.get('bucket_name')
+TypeError: can only concatenate str (not "NoneType") to str
+
+-->

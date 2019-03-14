@@ -1,0 +1,190 @@
+<bound method NDFrame.to_json of      id  FirstName      LastName  PlayerNumber  \
+0     1      Vinny      Wauchope            59   
+1     2      Laina      Cradduck            63   
+2     3      Erwin         Matei            74   
+3     4       Shea        Dubery            97   
+4     5    Eolanda       Jobbins            57   
+5     6    Simonne         Pluck            30   
+6     7      Adele    Lightowler            17   
+7     8       Emmy       Arthurs            18   
+8     9   Jefferey      Daughton            24   
+9    10     Lucien      Augustus            55   
+10   11     Shayne       Juschke             9   
+11   12      Basil    Auchinleck            65   
+12   13      Ashil   Westmarland            52   
+13   14     Edmund         Maund            74   
+14   15     Sholom    Waterhouse            18   
+15   16       Noni       Hollier            56   
+16   17   Eleanore      Meenehan            20   
+17   18     Lethia       Trinbey             9   
+18   19   Kaitlynn        Deacon            33   
+19   20       Ania        Varlow             5   
+20   21      Freda      McNickle            54   
+21   22      Karna     Alsobrook            10   
+22   23     Binnie      Stretton            97   
+23   24    Bridget         Benza            50   
+24   25  Gabriello        Huster            78   
+25   26      Clari         Churm            29   
+26   27       Viva        McLeod             7   
+27   28      Eamon     Moncaster            30   
+28   29        Isa       Tuxsell            89   
+29   30     Donnie         Foote            45   
+..  ...        ...           ...           ...   
+70   71     Leigha         Berre            12   
+71   72      Camey      Pedrollo             2   
+72   73     Bryana       Thorsen            74   
+73   74    Malorie        Dotson            68   
+74   75    Georgia       Dearell            89   
+75   76     Elvira        Aldren            40   
+76   77    Janifer  Thorndycraft            56   
+77   78     Joelly      Backwell            20   
+78   79       Chet       Merrgan             9   
+79   80     Shanie      Yearsley            61   
+80   81    Ernesta         Pryde             2   
+81   82  Sylvester      Sutterby            75   
+82   83     Morley       Wharton            84   
+83   84     Andree        Enbury            97   
+84   85       Rand       Bedward            85   
+85   86   Chrissie       Enrrico            92   
+86   87      Salim          Doul             3   
+87   88    Ardelis       Mintram            73   
+88   89     Dillie        Barens            57   
+89   90    Deborah      Learoyde            53   
+90   91       Cher    Davydychev            69   
+91   92     Alyson         Earey            79   
+92   93    Celinda      Pavlovic            81   
+93   94    Samaria      Cicerone            14   
+94   95       Beth     Pingstone            74   
+95   96    Nicolis        Schole            12   
+96   97   Boniface         Manon            50   
+97   98       Inge        Poland            38   
+98   99   Ortensia         Esson            21   
+99  100      Lissa   Normanville            17   
+
+                                             TeamName  \
+0                  First Nations University of Canada   
+1                       Universidad Torcuato di Tella   
+2                           Universidad Peruana Union   
+3                     Fachhochschule Gießen-Friedberg   
+4   Ho Chi Minh City University of Agriculture and...   
+5                  University of Wisconsin - Superior   
+6                           Dallas Baptist University   
+7                             Western Baptist College   
+8                           Ohio University - Eastern   
+9             Royal Melbourne Institute of Technology   
+10              Islamic Azad University, Bandar Abbas   
+11                                 Mahidol University   
+12                                   Njala University   
+13                                 Sabanci University   
+14                         Université Shalom de Bunia   
+15        Technological Education Institute of Athens   
+16                                 Université de Sfax   
+17                            Gulf Medical University   
+18                  Technological University (Sittwe)   
+19                 New York School of Interior Design   
+20                                     Olivet College   
+21            Saratov State Socio-Economic University   
+22                              Université de Kikwite   
+23                  Universidad Autónoma de Occidente   
+24             Universidad Nacional Agraria La Molina   
+25                         Fort Hays State University   
+26                             Hochschule Bremerhaven   
+27              Ecole Supérieure de Commerce de Lille   
+28                                   Union University   
+29               Hankuk University of Foreign Studies   
+..                                                ...   
+70                    Universidad del Valle de Toluca   
+71                           Rakuno Gakuen University   
+72                                   Rockford College   
+73                        United States Naval Academy   
+74                         Marymount College New York   
+75                    Fukuoka Institute of Technology   
+76                              Mountain View College   
+77                          Universitas Darma Persada   
+78                                   Crichton College   
+79                              Queen Arwa University   
+80                                     Shokei College   
+81                       George Washington University   
+82       National Institute of Technology, Jamshedpur   
+83                             New College of Florida   
+84          The McGregor School of Antioch University   
+85      Visvesvaraya National Institute of Technology   
+86                          Universidad de Montevideo   
+87   COMSATS Institute of Information Technology, Wah   
+88                Paris-Sorbonne University Abu Dhabi   
+89                           Université de Yaoundé II   
+90                                  Zanjan University   
+91                Fachhochschulstudiengänge Hagenberg   
+92                Hiroshima Bunkyo Women's University   
+93                      Claremont Graduate University   
+94                            Minnesota Bible College   
+95                                  Kaplan University   
+96                                   Kyoto University   
+97  Universidad Interamericana de Educacion a Dist...   
+98  IDRAC (Institut de recherche en action commerc...   
+99               Academy of Arts "George Enescu" Iasi   
+
+              PlayerPosition  HomeRuns sport_class  
+0              client-server       581    football  
+1                   Up-sized       253    football  
+2             clear-thinking       415    football  
+3                  maximized       648    football  
+4            Quality-focused        64    football  
+5    artificial intelligence       792    football  
+6            object-oriented       323    football  
+7                homogeneous       295    football  
+8             zero tolerance       265    football  
+9                    ability        87    football  
+10                systematic       289    football  
+11         context-sensitive       699    football  
+12            well-modulated       249    football  
+13                  didactic       890    football  
+14            Cross-platform       509    football  
+15               Fundamental       202    football  
+16             Multi-layered         9    football  
+17                   Secured       818    football  
+18         attitude-oriented       964    football  
+19                   Managed         4    football  
+20               Ameliorated       429    football  
+21                  Advanced       676    football  
+22                responsive       844    football  
+23                bifurcated        71    football  
+24            zero tolerance       419    football  
+25                high-level       882    football  
+26                  tertiary       607    football  
+27           next generation       992    football  
+28  Graphical User Interface       721    football  
+29                    hybrid       718    football  
+..                       ...       ...         ...  
+70                  protocol       432    football  
+71                 Polarised        79    football  
+72               directional       679    football  
+73                Down-sized       944    football  
+74               interactive       393    football  
+75                 Organized       445    football  
+76                responsive       451    football  
+77               Right-sized       797    football  
+78            infrastructure        20    football  
+79           Vision-oriented        15    football  
+80              Customizable       107    football  
+81              Synchronised       736    football  
+82                  Adaptive       297    football  
+83                asymmetric       967    football  
+84               Persevering       133    football  
+85                  extranet       129    football  
+86               needs-based       887    football  
+87               flexibility       561    football  
+88                    Robust       853    football  
+89       zero administration       229    football  
+90         pricing structure       211    football  
+91                   project       840    football  
+92                Synergized       269    football  
+93                     frame       337    football  
+94                 Proactive       924    football  
+95             De-engineered       521    football  
+96                 Intuitive       747    football  
+97               Centralized       804    football  
+98                  national       635    football  
+99                   support       789    football  
+
+[100 rows x 8 columns]>

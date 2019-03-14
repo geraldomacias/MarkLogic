@@ -1,0 +1,101 @@
+id,FirstName,LastName,PlayerNumber,TeamName,PlayerPosition,HomeRuns
+1,Vinny,Wauchope,59,First Nations University of Canada,client-server,581
+2,Laina,Cradduck,63,Universidad Torcuato di Tella,Up-sized,253
+3,Erwin,Matei,74,Universidad Peruana Union,clear-thinking,415
+4,Shea,Dubery,97,Fachhochschule Gießen-Friedberg,maximized,648
+5,Eolanda,Jobbins,57,Ho Chi Minh City University of Agriculture and Forestry,Quality-focused,64
+6,Simonne,Pluck,30,University of Wisconsin - Superior,artificial intelligence,792
+7,Adele,Lightowler,17,Dallas Baptist University,object-oriented,323
+8,Emmy,Arthurs,18,Western Baptist College,homogeneous,295
+9,Jefferey,Daughton,24,Ohio University - Eastern,zero tolerance,265
+10,Lucien,Augustus,55,Royal Melbourne Institute of Technology,ability,87
+11,Shayne,Juschke,9,"Islamic Azad University, Bandar Abbas",systematic,289
+12,Basil,Auchinleck,65,Mahidol University,context-sensitive,699
+13,Ashil,Westmarland,52,Njala University,well-modulated,249
+14,Edmund,Maund,74,Sabanci University,didactic,890
+15,Sholom,Waterhouse,18,Université Shalom de Bunia,Cross-platform,509
+16,Noni,Hollier,56,Technological Education Institute of Athens,Fundamental,202
+17,Eleanore,Meenehan,20,Université de Sfax,Multi-layered,9
+18,Lethia,Trinbey,9,Gulf Medical University,Secured,818
+19,Kaitlynn,Deacon,33,Technological University (Sittwe),attitude-oriented,964
+20,Ania,Varlow,5,New York School of Interior Design,Managed,4
+21,Freda,McNickle,54,Olivet College,Ameliorated,429
+22,Karna,Alsobrook,10,Saratov State Socio-Economic University,Advanced,676
+23,Binnie,Stretton,97,Université de Kikwite,responsive,844
+24,Bridget,Benza,50,Universidad Autónoma de Occidente,bifurcated,71
+25,Gabriello,Huster,78,Universidad Nacional Agraria La Molina,zero tolerance,419
+26,Clari,Churm,29,Fort Hays State University,high-level,882
+27,Viva,McLeod,7,Hochschule Bremerhaven,tertiary,607
+28,Eamon,Moncaster,30,Ecole Supérieure de Commerce de Lille,next generation,992
+29,Isa,Tuxsell,89,Union University,Graphical User Interface,721
+30,Donnie,Foote,45,Hankuk University of Foreign Studies,hybrid,718
+31,Davide,Emblem,2,Southern Utah University,internet solution,180
+32,Galina,Sibun,82,Dalian University of Technology,grid-enabled,116
+33,Raffarty,Burdfield,83,Theologische Fakultät Paderborn,web-enabled,688
+34,Doralyn,Takle,40,Instituto Tecnologico de Durango,analyzer,70
+35,Beauregard,Fatharly,69,Polytechnic Institute of Milan,Cross-platform,60
+36,Garfield,Harwood,20,Universidad de Costa Rica,zero defect,698
+37,Olympe,Kertess,47,"Universidad Autónoma del Beni ""José Ballivián""",solution,393
+38,Angela,Rymmer,75,DeVry Institute of Technology,conglomeration,380
+39,Stefa,Nurdin,33,University of Manchester,Robust,804
+40,Dru,Miliffe,23,Escola Nautica Infante D. Henrique,firmware,401
+41,Cybill,Beasant,52,Universidad Nacional de Córdoba,asymmetric,34
+42,Ashleigh,Onions,56,American University of Tirana,next generation,571
+43,Aubrie,Race,60,"Russian Customs Academy, Vladivostok Branch",explicit,497
+44,Rubi,Jacobssen,76,Universitas Simalungun,4th generation,574
+45,Saxon,Thwaites,36,Universidade do Sul de Santa Catarina,Pre-emptive,164
+46,Gino,Hows,18,Anna Maria College,paradigm,437
+47,Gladi,Siman,30,Southern Methodist University,User-centric,969
+48,Cordi,Bristow,28,Seisen University,ability,516
+49,Astra,Kidde,98,City University,3rd generation,885
+50,Denny,Payley,3,"Rutgers, The State University of New Jersey",analyzing,739
+51,Charissa,Orpyne,16,Universidad de Los Llanos,protocol,295
+52,Beauregard,Cattellion,83,Université Protestante au Congo,encoding,786
+53,Lacy,Fairchild,98,Universidad de Concepcion,Proactive,250
+54,Hazlett,Venable,79,Hope International University,synergy,62
+55,Codee,Philler,28,Osaka Sangyo University,Horizontal,324
+56,Lorne,Pretley,66,Adamawa State University,secondary,477
+57,Dannel,Lanfer,46,University of Akron,clear-thinking,674
+58,Averill,Roycroft,39,Far Eastern State Technical Fisheries University,user-facing,642
+59,Clerc,Esterbrook,40,Oduduwa University,intranet,872
+60,Justino,McDowell,52,Universitas Tidar Magelang,standardization,618
+61,Xena,Thackham,95,Moore College of Art and Design,frame,928
+62,Heath,Benez,14,Soran University,Compatible,103
+63,Vickie,Bousquet,22,University of Latvia,dedicated,884
+64,Baillie,Pawels,48,Yaroslavl International University of Business and New Technologies,human-resource,224
+65,Brian,Pennoni,5,Nara Sangyo University,Distributed,61
+66,Florella,Purselow,90,Ecole des Hautes Etudes Commerciales MAROC,context-sensitive,223
+67,Sergent,Gahagan,32,Universidad Simón Bolivar,homogeneous,814
+68,Martin,Joire,36,Saudi Electronic University,framework,979
+69,Janeva,Larkings,69,Government College University Faisalabad,Programmable,561
+70,Anabal,Werrit,33,Iwate Medical University,Compatible,480
+71,Leigha,Berre,12,Universidad del Valle de Toluca,protocol,432
+72,Camey,Pedrollo,2,Rakuno Gakuen University,Polarised,79
+73,Bryana,Thorsen,74,Rockford College,directional,679
+74,Malorie,Dotson,68,United States Naval Academy,Down-sized,944
+75,Georgia,Dearell,89,Marymount College New York,interactive,393
+76,Elvira,Aldren,40,Fukuoka Institute of Technology,Organized,445
+77,Janifer,Thorndycraft,56,Mountain View College,responsive,451
+78,Joelly,Backwell,20,Universitas Darma Persada,Right-sized,797
+79,Chet,Merrgan,9,Crichton College,infrastructure,20
+80,Shanie,Yearsley,61,Queen Arwa University,Vision-oriented,15
+81,Ernesta,Pryde,2,Shokei College,Customizable,107
+82,Sylvester,Sutterby,75,George Washington University,Synchronised,736
+83,Morley,Wharton,84,"National Institute of Technology, Jamshedpur",Adaptive,297
+84,Andree,Enbury,97,New College of Florida,asymmetric,967
+85,Rand,Bedward,85,The McGregor School of Antioch University,Persevering,133
+86,Chrissie,Enrrico,92,Visvesvaraya National Institute of Technology,extranet,129
+87,Salim,Doul,3,Universidad de Montevideo,needs-based,887
+88,Ardelis,Mintram,73,"COMSATS Institute of Information Technology, Wah",flexibility,561
+89,Dillie,Barens,57,Paris-Sorbonne University Abu Dhabi,Robust,853
+90,Deborah,Learoyde,53,Université de Yaoundé II,zero administration,229
+91,Cher,Davydychev,69,Zanjan University,pricing structure,211
+92,Alyson,Earey,79,Fachhochschulstudiengänge Hagenberg,project,840
+93,Celinda,Pavlovic,81,Hiroshima Bunkyo Women's University,Synergized,269
+94,Samaria,Cicerone,14,Claremont Graduate University,frame,337
+95,Beth,Pingstone,74,Minnesota Bible College,Proactive,924
+96,Nicolis,Schole,12,Kaplan University,De-engineered,521
+97,Boniface,Manon,50,Kyoto University,Intuitive,747
+98,Inge,Poland,38,Universidad Interamericana de Educacion a Distancia de Panama,Centralized,804
+99,Ortensia,Esson,21,IDRAC (Institut de recherche en action commerciale),national,635
+100,Lissa,Normanville,17,"Academy of Arts ""George Enescu"" Iasi",support,789
