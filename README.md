@@ -1,7 +1,7 @@
-# MarkLogic
+# MarkLogic Data Classifier
 [![Build Status](https://travis-ci.org/geraldomacias/MarkLogic.svg?branch=master)](https://travis-ci.org/geraldomacias/MarkLogic)
 
-## HI
+## Installation Steps
 
 I did a few things.
 To run the code (which you rly should do pls)
