@@ -11,8 +11,10 @@ from collections import defaultdict
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 
-# jsonInput format
-# { <file_name1> :  [col_name1, col_name2, ....],
+"""
+    jsonInput format
+    { <file_name1> :  [col_name1, col_name2, ....], }
+"""
 def matchSport(jsonInput, auth_token, app):
 
     """
@@ -106,7 +108,6 @@ def matchSport(jsonInput, auth_token, app):
     # Convert the categorical columns into numeric
     encode_value = le.fit_transform(cols)
 
-
     # Reshape data
     encode_value = encode_value.reshape(-1, 1)
 
@@ -135,12 +136,22 @@ def matchSport(jsonInput, auth_token, app):
     # Formatting for player cards
     rows = df.shape[0]
     columns = df.columns
+    spec_cols = []
     players = []
-    tp = df.id.dtypes
+
+    # Get all special int64 columns
+    for col in columns:
+        if df[col].dtype == 'int64':
+            spec_cols.append(col)
+
+    # Make a dictiionary which contains all players
+    # For each player
     for i in range(rows):
         player = {}
+        # For each field
         for col in columns:
-            if type(df.loc[i][col]) == tp:
+            # Typecast int64 to int
+            if col in spec_cols:
                 player[col] = int(df.loc[i][col])
             else:
                 player[col] = df.loc[i][col]
