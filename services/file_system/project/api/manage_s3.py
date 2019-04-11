@@ -439,11 +439,59 @@ class UploadedListAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 401
 
+class ClassifiedListAPI(MethodView):
+    """
+    Returns list of classified files for the user
+    """
+
+    def get(self):
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                files = S3Files.query.filter_by(user_id=resp).all()
+                classified_names = list()
+                classified_links = list()
+                for row in files:
+                    if row.classified_filename and row.classified_url:
+                        classified_names.append(row.classified_filename)
+                        classified_links.append(row.classified_url)
+                file_json = [{"classified_names": n, "classified_links": l} for n, l in zip(classified_names, classified_links)]
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Listing ' + str(len(file_json)) + ' classified files.',
+                    'data': file_json
+                }
+                return make_response(jsonify(responseObject)), 200
+            responseObject = {
+                'status': 'fail',
+                'message': resp
+            }
+            return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+
 upload_original_view = UploadOriginalAPI.as_view('upload_original_api')
 upload_classified_view = UploadClassifiedAPI.as_view('upload_classified_api')
 download_uploaded_view = DownloadUploadedAPI.as_view('download_uploaded_api')
 download_classified_view = DownloadClassifiedAPI.as_view('download_classified_api')
 upload_list_view = UploadedListAPI.as_view('upload_list_api')
+classified_list_view = ClassifiedListAPI.as_view('classified_list_api')
 
 s3_blueprint.add_url_rule(
     '/s3/uploadClassified',
@@ -468,6 +516,11 @@ s3_blueprint.add_url_rule(
 s3_blueprint.add_url_rule(
     '/s3/file_list',
     view_func=upload_list_view,
+    methods=['GET']
+)
+s3_blueprint.add_url_rule(
+    '/s3/classified_list',
+    view_func=classified_list_view,
     methods=['GET']
 )
 
