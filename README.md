@@ -1,5 +1,6 @@
 # MarkLogic
 [![Build Status](https://travis-ci.org/geraldomacias/MarkLogic.svg?branch=master)](https://travis-ci.org/geraldomacias/MarkLogic)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgeraldomacias%2FMarkLogic.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgeraldomacias%2FMarkLogic?ref=badge_shield)
 
 ## HI
 
@@ -16,3 +17,8 @@ Also, check out http://localhost/users and http://localhost/users/<user_id>
 Pls look around the code and check it out. I'm not 100% sure what the code is doing either, but together, we can overcome ANY challenge.
 
 Theoretically, this will be the code / microservice for users / login / account stuff. That's why its in the "users" folder. Other services we add (like the machine learning, file upload, all that) will have their own folders, and their own containers. All these containers are joined by the docker-compose-dev.yml (or prod) file.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgeraldomacias%2FMarkLogic.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgeraldomacias%2FMarkLogic?ref=badge_large)
+=======
