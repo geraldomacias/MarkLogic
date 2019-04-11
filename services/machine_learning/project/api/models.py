@@ -1,10 +1,12 @@
-# services/file_system/project/api/models.py
+# services/machine_learning/project/api/models.py
 
 import jwt
 
 import datetime
 
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import JSON
 
 from project import db
 
@@ -53,24 +55,18 @@ class BlacklistToken(db.Model):
         else:
             return False
 
-class S3Files(db.Model):
+class MLStatus(db.Model):
     """
-    Model for storing files and their corresponding urls
+    Model for storing user ML status
     """
-    __tablename__ = 's3_files'
+    __tablename__ = 'ml_status'
 
     user_id = db.Column(db.Integer, primary_key=True)
-    input_filename = db.Column(db.String(128), nullable=False, primary_key=True)
-    input_url = db.Column(db.String(128), unique=True, nullable=False)
-    classified_filename = db.Column(db.String(128), nullable=True)
-    classified_url = db.Column(db.String(128), nullable=True)
+    status = db.Column(db.String(128), nullable=False)
+    selected_files = db.Column(ARRAY(db.String(128)), nullable=True)
+    working_directory = db.Column(db.String(500), nullable=True)
+    classified_json = db.Column(JSON, nullable=True)
 
-    def __init__(self, user_id, input_filename, input_url):
-        self.user_id = user_id
-        self.input_filename = input_filename
-        self.input_url = input_url
-
-    def add_classified(self, classified_name, classified_url):
-        self.classified_filename = classified_name
-        self.classified_url = classified_url
-        db.session.commit()
+    def __init__(self, user_id, status):
+        self.user_id = user_id 
+        self.status = status 

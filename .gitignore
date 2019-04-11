@@ -4,3 +4,9 @@ env
 .DS_Store
 services/client/node_modules/
 pems/
+AWSCreds.py
+htmlcov/
+.coverage
+.aws/
+services/file_system/temporary_folder/
+Downloads/
