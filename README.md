@@ -7,6 +7,10 @@ We are Team Mark, a software development team based out of Cal Poly and we welco
 
 Future development involves removal of any found defects and stylization of our current UI and UX. We will also be working on improving the efficiency of our classification strategy by using a more in depth ontology. 
 
+Here is a list of all the necessary licensing for any 3rd party dependancies that we use:
+
+
+
 ## Installation Steps
 
 I did a few things.
