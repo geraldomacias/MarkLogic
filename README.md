@@ -51,7 +51,7 @@ Here is a list of all the necessary licensing for any 3rd party dependancies tha
  -pandas            0.24.2    BSD License
 
 ## Installation Steps
-To run the code:
+To run the Backend:
 1. INSTALL DOCKER (Use desktop install, not homebrew)
 2. RUN DOCKER
 3. Run the build_and_run.sh script
@@ -61,3 +61,13 @@ To run the code:
 Also, check out http://localhost/users and http://localhost/users/<user_id>
 
 Theoretically, this will be the code / microservice for users / login / account stuff. That's why its in the "users" folder. Other services we add (like the machine learning, file upload, all that) will have their own folders, and their own containers. All these containers are joined by the docker-compose-dev.yml (or prod) file.
+
+To run the Front-End:
+1. ensure you have the appropriate version of yarn or npm
+2. Clone the repo from https://github.com/mattyarmolich/MarkLogicClassifier.git using the command 'git clone https://github.com/mattyarmolich/MarkLogicClassifier.git'
+3.cd into the directory
+4. run yarn/npm install to load all of the external depencencies of the project
+4A. - if running locally install the CORS allow plugin for chrome to allow external GET/POST requests to function as if its been deployed - run yarn start to run locally - configure the urlAssets file in /utils to hit your desired endpoint link for the backend
+4B. to deploy to s3 use the amazon aws cli with s3 - create an s3 bucket with public policy and public access - setup the AWS CLI using aws configue and entering in your secret credentials - run yarn run build && yarn deploy to deploy to that s3 bucket    - access the code through your buckets link
+
+Navigate to your designated endpoint (either http://localhost:3000 or your AWS S3 Bucket link) and use the software
