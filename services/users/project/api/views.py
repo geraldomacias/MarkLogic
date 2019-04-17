@@ -4,6 +4,7 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from flask_cors import CORS
+from email_validator import validate_email, EmailNotValidError
 
 from project import bcrypt, db
 from project.api.models import User, BlacklistToken
@@ -21,6 +22,16 @@ class RegisterAPI(MethodView):
     def post(self):
         # get the post data
         post_data = request.get_json()
+        #verify the email address is valid
+        try:
+            v = validate_email(post_data.get('email')) # validate and get info
+        except EmailNotValidError as e:
+            # email is not valid, exception message is human-readable
+            responseObject = {
+                'status': 'fail',
+                'message': 'Email is not valid.'
+            }
+            return make_response(jsonify(responseObject)), 400
         # check if the user already exists
         user = User.query.filter_by(email=post_data.get('email')).first()
         if not user:
