@@ -80,7 +80,7 @@ class TestUserService(BaseTestCase):
     def test_registration_invalid_email(self):
         """Test registration with an invalid email address"""
         with self.client:
-            response = register_user(self, 'joe@gmail.com', '123456')
+            response = register_user(self, 'bademail@lmfao', '123456')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Email is not valid.')
