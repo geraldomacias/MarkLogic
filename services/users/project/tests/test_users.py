@@ -77,6 +77,16 @@ class TestUserService(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 202)
 
+    def test_registration_invalid_email(self):
+        """Test registration with an invalid email address"""
+        with self.client:
+            response = register_user(self, 'joe@gmail.com', '123456')
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Email is not valid.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 400)
+
     def test_registered_user_login(self):
         """Test for login of registered user"""
         with self.client:
