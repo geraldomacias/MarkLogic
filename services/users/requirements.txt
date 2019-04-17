@@ -8,3 +8,4 @@ PyJWT==1.7.1
 Flask-Bcrypt==0.7.1
 pytest==4.1.1
 pytest-cov==2.6.1
+verify-email==2.3.1
