@@ -8,3 +8,5 @@ PyJWT==1.7.1
 pytest==4.1.1
 boto3==1.9.60
 pytest-cov==2.6.1
+Flask-Migrate==2.4.0
+Flask-Script==2.0.6

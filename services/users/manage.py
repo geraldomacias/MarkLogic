@@ -3,12 +3,19 @@
 import unittest
 
 from flask.cli import FlaskGroup
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
 from project import create_app, db
 from project.api.models import User
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
+
+migrate = Migrate(app, db)
+manager = Manager(app)
+
+manager.add_command('db', MigrateCommand)
 
 # adds new command line command called recreate_db
 @cli.command()
@@ -37,4 +44,5 @@ def seed_db():
 
 
 if __name__ == '__main__':
+    manager.run()
     cli()
