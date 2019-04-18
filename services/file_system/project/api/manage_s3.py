@@ -96,7 +96,16 @@ def uploads(user_id, all_files):
             Key=key_name
         )
 
-        uploads_response[files + "_URL"] = (download_url + key_name).replace(" ", "+")
+        url = client.generate_presigned_url(
+            ClientMethod='get_object',
+            Params={
+                'Bucket': bucket_name,
+                'Key': key_name
+            }
+        )
+
+        uploads_response[files + "_URL"] = url.replace("//s3", "//s3-us-west-2")
+        # uploads_response[files + "_URL"] = (download_url + key_name).replace(" ", "+")
         uploads_response[files] = cur_name
         
         new_row = S3Files(
@@ -155,7 +164,16 @@ def classified(user_id, values, all_files):
             Key=key_name
         )
 
-        classified_response[files + "_URL"] = (download_url + key_name).replace(" ", "+")
+        url = client.generate_presigned_url(
+            ClientMethod='get_object',
+            Params={
+                'Bucket': bucket_name,
+                'Key': key_name
+            }
+        )
+
+        classified_response[files + "_URL"] = url.replace("//s3", "//s3-us-west-2")
+        # classified_response[files + "_URL"] = (download_url + key_name).replace(" ", "+")
         classified_response[files] = cur_name
         
         classified_name = cur_name
@@ -245,6 +263,9 @@ def downloadUploaded(user_id, values):
     bucket_name = os.getenv('S3_UPLOAD')
     file_type = "uploads"
     download_url = "https://s3-us-west-2.amazonaws.com/capstone.upload/"
+    
+    # Get the service client.
+    s3 = boto3.client('s3')
 
     responseObject = {
         'status': 'fail',
@@ -264,16 +285,49 @@ def downloadUploaded(user_id, values):
         for orig_file in orig_list:
             responseObject[orig_file] = orig_file
             key_name = orig_file + '.' + user_id + '.' + file_type
-            responseObject[orig_file + '_download_url'] = (download_url + key_name).replace(" ", "+")
+
+            # Generate the URL to get 'key-name' from 'bucket-name'	    
+            url = s3.generate_presigned_url(
+                ClientMethod='get_object',
+                Params={
+                    'Bucket': bucket_name,
+                    'Key': key_name
+                }
+            )
+
+            # responseObject[orig_file + '_download_url'] = (download_url + key_name).replace(" ", "+")
+            # responseObject[orig_file + '_key_name'] = key_name
+
+            responseObject[orig_file + '_download_url'] = url.replace("//s3", "//s3-us-west-2")
             responseObject[orig_file + '_key_name'] = key_name
 
     else:
         for value in values:
             orig_file = values.get(value)
+            cur_file = S3Files.query.filter(S3Files.user_id == user_id, S3Files.input_filename == orig_file).all()
+            if (len(cur_file) == 0):
+                responseObject['status'] = 'failure'
+                responseObject['status_code'] = '404'
+                responseObject['message'] = 'At least one file does not exist'
+
+                return responseObject
+
             responseObject[value] = orig_file
             key_name = orig_file + '.' + user_id + '.' + file_type
-            responseObject[value + '_download_url'] = (download_url + key_name).replace(" ", "+")
-            responseObject[value + '_key_name'] = key_name
+
+            # Generate the URL to get 'key-name' from 'bucket-name'	    
+            url = s3.generate_presigned_url(
+                ClientMethod='get_object',
+                Params={
+                    'Bucket': bucket_name,
+                    'Key': key_name
+                }
+            )
+
+            # responseObject[orig_file + '_download_url'] = (download_url + key_name).replace(" ", "+")
+            # responseObject[orig_file + '_key_name'] = key_name
+            responseObject[orig_file + '_download_url'] = url.replace("//s3", "//s3-us-west-2")
+            responseObject[orig_file + '_key_name'] = key_name
 
     responseObject['status'] = 'success'
     responseObject['status_code'] = '200'
@@ -284,6 +338,8 @@ def downloadUploaded(user_id, values):
 
 def downloadClassified(user_id, values):
 # Given a classified filename, download them to user
+    # Get the service client.
+    s3 = boto3.client('s3')
     bucket_name = os.getenv('S3_CLASSIFIED')
     file_type = "classified"
     download_url = "https://s3-us-west-2.amazonaws.com/capstone.classified/"
@@ -296,10 +352,32 @@ def downloadClassified(user_id, values):
 
     for value in values:
         orig_file = values.get(value)
+        #FIXME: Not getting the file right. Need to look at DB
+        cur_file = S3Files.query.filter(S3Files.user_id == user_id, S3Files.classified_filename == orig_file).all()
+        if (len(cur_file) == -1):
+            responseObject['status'] = 'failure'
+            responseObject['status_code'] = '404'
+            responseObject['message'] = 'At least one file does not exist'
+
+            return responseObject
+
+
         responseObject[value] = orig_file
         key_name = orig_file + '.' + user_id + '.' + file_type
-        responseObject[value + '_download_url'] = (download_url + key_name).replace(" ", "+")
-        responseObject[value + '_key_name'] = key_name
+
+        # Generate the URL to get 'key-name' from 'bucket-name'	    
+        url = s3.generate_presigned_url(
+            ClientMethod='get_object',
+            Params={
+                'Bucket': bucket_name,
+                'Key': key_name
+            }
+        )
+
+        # responseObject[orig_file + '_download_url'] = (download_url + key_name).replace(" ", "+")
+        # responseObject[orig_file + '_key_name'] = key_name
+        responseObject[orig_file + '_download_url'] = url.replace("//s3", "//s3-us-west-2")
+        responseObject[orig_file + '_key_name'] = key_name
 
         folder_loc = os.getenv('HOLD_FOLDER')
 
