@@ -18,6 +18,8 @@ In order do get this system running please follow the following links and their 
 
 -[Back End Instructions](backend_installation.md)
 
+-[AWS Instructions](aws_installation.md)
+
 ## 3rd Party Software Packages
 
 [Here](list_of_licenses.md) is a list of the softwares that we used to create this program and their associated licensing information.
