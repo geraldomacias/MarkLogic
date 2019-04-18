@@ -8,7 +8,7 @@ We may, from time-to-time, update this Privacy Statement, so we encourage you to
 Please read our Terms of Use to find out more about the requirements for using our Digital Tools. Please note that individual applications are governed by terms of use customized for that specific application.
 
 2. HOW WE USE YOUR PERSONAL INFORMATION.
-We will generally only collect and use your personal information when it is necessary to achieve our legitimate interests of fostering spiritual growth, which includes providing spiritual guidance, coaching, events, meetings, and Digital Tools. We may also use your personal information when it is needed to provide you with goods or services, or to process donations or to comply with our legal obligations.
+We will generally only collect and use your personal information when it is necessary to achieve our legitimate interests of creating an account to upload files for classification. We may also use your personal information when it is needed to provide you with goods or services, or to process donations or to comply with our legal obligations.
 
 We set out below a table where we describe each of the ways in which we use your Personal Information, the types of Personal Information that we use and the legal basis that applies to that use. Where the legal basis is “legitimate interest” we also set out some further details.
 The legal basis and details of the legitimate interests detailed in the table below only apply where we are subject to the GDPR or other EU privacy laws.
@@ -46,34 +46,11 @@ LEGITIMATE INTEREST: To ensure that your accounts on our Digital Tools are kept 
 
 To apply for, or participate in, short or long term mission opportunities with us; to apply or participate as a volunteer.
 TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; application data
-LEGAL BASIS: Contract LEGITIMATE INTEREST:
 
-For spiritual guidance and support.
-TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; Information about your beliefs & circumstances; requests and preferences
-LEGAL BASIS: Legitimate Interests
-LEGITIMATE INTEREST: To provide spiritual guidance and support; to allow us to pray for you; to provide you with resources and activities that will help you grow spiritually
 
-To provide forums and digital communities.
-TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; Your posts in discussion threads
-LEGAL BASIS: Legitimate interests
-LEGITIMATE INTEREST: To provide a place for you to discuss spiritual and mission based topics
-For fund development.
-
- To process donations.
-TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; Financial data; financial transaction data; contact details; and tax status
-LEGAL BASIS: Contract and Legitimate interests
-LEGITIMATE INTEREST: To securely receive your donation toward our charitable aims
-
-For statutory reporting.
 TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; tax status LEGAL BASIS: Legal Obligations and Legitimate Interests
-LEGITIMATE INTEREST: We may have obligations to report to the authorities in other countries
+LEGITIMATE INTEREST: We may have obligations to report to the authorities in other countries to deliver goods and services.
 
-To deliver goods and services.
-TYPES OF PERSONAL INFORMATION INVOLVED: Financial data; financial transaction data; contact details
-LEGAL BASIS: Contract
-LEGITIMATE INTEREST:
-
-To allow us to improve our tools; to maintain an audit trail of access to data; troubleshooting; data analysis; system maintenance;
 TYPES OF PERSONAL INFORMATION INVOLVED: Historical transaction data; system data; audit logs; and location data
 LEGAL BASIS: Legitimate Interests
 LEGITIMATE INTEREST: To manage and protect our Digital Tools; to ensure that our services run effectively and to track who is accessing your data
@@ -86,7 +63,7 @@ You can find more information on the data types we collect in section 4 below.
 
 3. HOW WE COLLECT PERSONAL INFORMATION.
 We obtain personal information about you via:
-direct interactions: when you enquire about our activities, engage in an activity with us, make a donation, register through one of our sites or at an event, or otherwise give us your personal information. If you meet with us for discipleship or spiritual advice, we may take confidential notes for spiritual guidance and support. If you prefer that we do not take notes, please let us know. The information you disclose is entirely at your discretion.
+direct interactions: when you enquire about our activities, engage in an activity with us, register through one of our sites or at an event, or otherwise give us your personal information. 
 cookies and other automated technologies: when you interact with our Digital Tools we may use cookies and similar technologies to track activities (for more information, see “Cookies and Information Collected by Technology” below). We also track usage of mobile apps through analytics.
 third parties [or other publicly available sources]: we may from time to time obtain personal information about you from third parties [and public sources] (e.g. US Census Data). We will only collect personal information from third parties if they have obtained that information in a legal and proper way.
 Referral of information by individuals. Your name and contact details may have been passed to us by someone you know, who indicated that you might be interested in hearing about our system, according to the chart in section 2.
