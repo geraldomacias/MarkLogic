@@ -8,7 +8,7 @@ We may, from time-to-time, update this Privacy Statement, so we encourage you to
 Please read our Terms of Use to find out more about the requirements for using our Digital Tools. Please note that individual applications are governed by terms of use customized for that specific application.
 
 2. HOW WE USE YOUR PERSONAL INFORMATION.
-We will generally only collect and use your personal information when it is necessary to achieve our legitimate interests of fostering spiritual growth, which includes providing spiritual guidance, coaching, events, meetings, and Digital Tools. We may also use your personal information when it is needed to provide you with goods or services, or to process donations or to comply with our legal obligations.
+We will generally only collect and use your personal information when it is necessary to achieve our legitimate interests of creating an account to upload files for classification. We may also use your personal information when it is needed to provide you with goods or services, or to process donations or to comply with our legal obligations.
 
 We set out below a table where we describe each of the ways in which we use your Personal Information, the types of Personal Information that we use and the legal basis that applies to that use. Where the legal basis is “legitimate interest” we also set out some further details.
 The legal basis and details of the legitimate interests detailed in the table below only apply where we are subject to the GDPR or other EU privacy laws.
