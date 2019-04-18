@@ -42,7 +42,7 @@ We use GitHub for versioning.
 * **Landon Gerrits** -- Frontend
 * **Geraldo Macias** -- Machine Learning
 * **Dominic Tsoi**   -- Machine Learning
-* **Jake Veazy**     -- AWS Management
+* **Jake Veazey**     -- AWS Management
 
 
 ## License
