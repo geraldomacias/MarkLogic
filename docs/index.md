@@ -14,11 +14,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 In order do get this system running please follow the following links and their associated instructions:
 
+-[AWS Instructions](aws_installation.md)
+
 -[Front End Instructions](frontend_installation.md)
 
 -[Back End Instructions](backend_installation.md)
 
--[AWS Instructions](aws_installation.md)
 
 ## 3rd Party Software Packages
 
