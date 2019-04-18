@@ -46,34 +46,11 @@ LEGITIMATE INTEREST: To ensure that your accounts on our Digital Tools are kept 
 
 To apply for, or participate in, short or long term mission opportunities with us; to apply or participate as a volunteer.
 TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; application data
-LEGAL BASIS: Contract LEGITIMATE INTEREST:
 
-For spiritual guidance and support.
-TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; Information about your beliefs & circumstances; requests and preferences
-LEGAL BASIS: Legitimate Interests
-LEGITIMATE INTEREST: To provide spiritual guidance and support; to allow us to pray for you; to provide you with resources and activities that will help you grow spiritually
 
-To provide forums and digital communities.
-TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; Your posts in discussion threads
-LEGAL BASIS: Legitimate interests
-LEGITIMATE INTEREST: To provide a place for you to discuss spiritual and mission based topics
-For fund development.
-
- To process donations.
-TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; Financial data; financial transaction data; contact details; and tax status
-LEGAL BASIS: Contract and Legitimate interests
-LEGITIMATE INTEREST: To securely receive your donation toward our charitable aims
-
-For statutory reporting.
 TYPES OF PERSONAL INFORMATION INVOLVED: Identity data; contact details; tax status LEGAL BASIS: Legal Obligations and Legitimate Interests
-LEGITIMATE INTEREST: We may have obligations to report to the authorities in other countries
+LEGITIMATE INTEREST: We may have obligations to report to the authorities in other countries to deliver goods and services.
 
-To deliver goods and services.
-TYPES OF PERSONAL INFORMATION INVOLVED: Financial data; financial transaction data; contact details
-LEGAL BASIS: Contract
-LEGITIMATE INTEREST:
-
-To allow us to improve our tools; to maintain an audit trail of access to data; troubleshooting; data analysis; system maintenance;
 TYPES OF PERSONAL INFORMATION INVOLVED: Historical transaction data; system data; audit logs; and location data
 LEGAL BASIS: Legitimate Interests
 LEGITIMATE INTEREST: To manage and protect our Digital Tools; to ensure that our services run effectively and to track who is accessing your data
@@ -86,7 +63,7 @@ You can find more information on the data types we collect in section 4 below.
 
 3. HOW WE COLLECT PERSONAL INFORMATION.
 We obtain personal information about you via:
-direct interactions: when you enquire about our activities, engage in an activity with us, make a donation, register through one of our sites or at an event, or otherwise give us your personal information. If you meet with us for discipleship or spiritual advice, we may take confidential notes for spiritual guidance and support. If you prefer that we do not take notes, please let us know. The information you disclose is entirely at your discretion.
+direct interactions: when you enquire about our activities, engage in an activity with us, register through one of our sites or at an event, or otherwise give us your personal information. 
 cookies and other automated technologies: when you interact with our Digital Tools we may use cookies and similar technologies to track activities (for more information, see “Cookies and Information Collected by Technology” below). We also track usage of mobile apps through analytics.
 third parties [or other publicly available sources]: we may from time to time obtain personal information about you from third parties [and public sources] (e.g. US Census Data). We will only collect personal information from third parties if they have obtained that information in a legal and proper way.
 Referral of information by individuals. Your name and contact details may have been passed to us by someone you know, who indicated that you might be interested in hearing about our system, according to the chart in section 2.
