@@ -78,3 +78,21 @@ def insert_cwd(app, auth_token, cwd):
         status.working_directory = cwd
 
         db.session.commit()
+
+def set_status_error(app, auth_token, error):
+    with app.app_context():
+        resp = decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            # auth_token isn't valid anymore - that's not good
+            print(resp)
+        status = MLStatus.query.filter_by(user_id=resp).first()
+        if not status:
+            # Can't find user in status DB - that's not good
+            print("Cannot find user in status DB")
+        status.status = "Failed to process files."
+        status.error_msg = error 
+
+        db.session.commit()
+
+
+
