@@ -17,15 +17,8 @@ from sklearn.metrics import accuracy_score
 """
 def matchSport(jsonInput, auth_token, app):
 
-    """
-    f = open('lookforme!!!!!!',"w+")
-    for i in range(10):
-        f.write("This is line %d\r\n" % (i+1))
-    f.close()
-    """
-
     # Load data.json
-    with open('project/data.json') as f:
+    with open('project/data2.json') as f:
         data = json.load(f)
 
     X = []
