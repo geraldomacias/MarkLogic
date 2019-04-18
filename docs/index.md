@@ -10,7 +10,7 @@ Future development involves removal of any found defects and stylization of our 
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. 
 
-Here is the link to our live instance: http://capstone.statics.s3-website-us-west-2.amazonaws.com/Home
+Here is the [link](http://capstone.statics.s3-website-us-west-2.amazonaws.com/Home) to our live instance
 
 ### Startup Instructions
 
