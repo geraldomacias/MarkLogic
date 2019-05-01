@@ -5,6 +5,7 @@ import jwt
 import datetime
 
 from sqlalchemy.sql import func
+from sqlalchemy.dialects.postgresql import ARRAY
 
 from project import db
 
@@ -53,24 +54,43 @@ class BlacklistToken(db.Model):
         else:
             return False
 
-class S3Files(db.Model):
+class S3InputFiles(db.Model):
     """
-    Model for storing files and their corresponding urls
+    Model for storing input files, urls, and status
     """
-    __tablename__ = 's3_files'
+    __tablename__ = 's3_input'
 
-    user_id = db.Column(db.Integer, primary_key=True)
-    input_filename = db.Column(db.String(128), nullable=False, primary_key=True)
-    input_url = db.Column(db.String(128), unique=True, nullable=False)
-    classified_filename = db.Column(db.String(128), nullable=True)
-    classified_url = db.Column(db.String(128), nullable=True)
+    file_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer)
+    filename = db.Column(db.String(128))
+    url = db.Column(db.String(128), unique=True)
+    deleted = db.Column(db.Boolean, default=False)
 
-    def __init__(self, user_id, input_filename, input_url):
+    db.UniqueConstraint('user_id', 'filename')
+
+    def __init__(self, user_id, filename, url):
         self.user_id = user_id
         self.input_filename = input_filename
-        self.input_url = input_url
+        self.url = url
 
-    def add_classified(self, classified_name, classified_url):
-        self.classified_filename = classified_name
-        self.classified_url = classified_url
-        db.session.commit()
+class S3ClassifiedFiles(db.Model):
+    """
+    Model for storing classified files, urls, status, and foreign input files
+    """
+    __tablename__ = 's3_classified'
+
+    file_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer)
+    filename = db.Column(db.String(128))
+    url = db.Column(db.String(128), unique=True)
+    deleted = db.Column(db.Boolean, default=False)
+    input_files = db.Column(ARRAY(db.Integer, db.ForeignKey('S3InputFiles.file_id')))
+
+    db.UniqueConstraint('user_id', 'filename')
+
+    # INPUT FILES IS A LIST OF FILE_ID REFERENCES, FROM S3INPUTFILES TABLE
+    def __init__(self, user_id, filename, url, input_files):
+        self.user_id = user_id
+        self.input_filename = input_filename
+        self.url = url 
+        self.input_files = input_files

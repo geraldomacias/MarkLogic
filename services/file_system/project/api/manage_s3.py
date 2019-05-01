@@ -12,7 +12,7 @@ import json
 import zipfile
 
 from project import db
-from project.api.models import decode_auth_token, S3Files
+from project.api.models import decode_auth_token, S3InputFiles, S3ClassifiedFiles
 
 s3_blueprint = Blueprint('s3', __name__)
 
