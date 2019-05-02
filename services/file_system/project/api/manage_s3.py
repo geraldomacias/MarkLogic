@@ -12,7 +12,7 @@ import json
 import zipfile
 
 from project import db
-from project.api.models import decode_auth_token, S3Files
+from project.api.models import decode_auth_token, S3InputFiles, S3ClassifiedFiles
 
 s3_blueprint = Blueprint('s3', __name__)
 
@@ -492,12 +492,13 @@ class UploadedListAPI(MethodView):
         if auth_token:
             resp = decode_auth_token(auth_token)
             if not isinstance(resp, str):
-                files = S3Files.query.filter_by(user_id=resp).all()
+                files = S3InputFiles.query.filter_by(user_id=resp).all()
                 file_names = list()
                 file_links = list()
                 for row in files:
-                    file_names.append(row.input_filename)
-                    file_links.append(row.input_url)
+                    if row.deleted == False:
+                        file_names.append(row.filename)
+                        file_links.append(row.url)
                 file_json = [{"file_names": n, "file_links": l} for n, l in zip(file_names, file_links)]
                 responseObject = {
                     'status': 'success',
@@ -538,13 +539,13 @@ class ClassifiedListAPI(MethodView):
         if auth_token:
             resp = decode_auth_token(auth_token)
             if not isinstance(resp, str):
-                files = S3Files.query.filter_by(user_id=resp).all()
+                files = S3ClassifiedFiles.query.filter_by(user_id=resp).all()
                 classified_names = list()
                 classified_links = list()
                 for row in files:
-                    if row.classified_filename and row.classified_url:
-                        classified_names.append(row.classified_filename)
-                        classified_links.append(row.classified_url)
+                    if row.deleted == False:
+                        classified_names.append(row.filename)
+                        classified_links.append(row.url)
                 file_json = [{"classified_names": n, "classified_links": l} for n, l in zip(classified_names, classified_links)]
                 responseObject = {
                     'status': 'success',
