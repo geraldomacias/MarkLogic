@@ -126,6 +126,31 @@ class TestUploadedFiles(BaseTestCase):
             self.assertTrue(data['message'] == 'Listing 0 files.')
             self.assertEqual(response.status_code, 200)
 
+    def test_uploaded_files_deleted_files(self):
+        """Test for getting uploaded files if only files are deleted."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # add two uploaded files to db, mark them as deleted
+            file1 = S3InputFiles(1, 'file1', 'file1_url')
+            file2 = S3InputFiles(1, 'file2', 'file2_url')
+            file1.deleted = True 
+            file2.deleted = True
+            db.session.add(file1)
+            db.session.add(file2)
+            db.session.commit()
+
+            #request
+            response = self.client.get(
+                '/s3/file_list',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Listing 0 files.')
+            self.assertEqual(response.status_code, 200)
+
     def test_uploaded_files(self):
         """Test for getting uploaded files with correct input."""
         with self.client:
@@ -246,6 +271,31 @@ class TestClassifiedFiles(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Listing 0 classified files.')
+
+    def test_classified_files_deleted_files(self):
+        """Test for getting classified files if only files are deleted."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # add two uploaded files to db, mark them as deleted
+            file1 = S3ClassifiedFiles(1, 'classified_file1', 'classified_file1_url', [1,2])
+            file2 = S3ClassifiedFiles(1, 'classified_file2', 'classified_file2_url', [2,3])
+            file1.deleted = True 
+            file2.deleted = True
+            db.session.add(file1)
+            db.session.add(file2)
+            db.session.commit()
+
+            #request
+            response = self.client.get(
+                '/s3/classified_list',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Listing 0 classified files.')
+            self.assertEqual(response.status_code, 200)
 
     def test_classified_files(self):
         """Test for getting classified files with correct input."""
