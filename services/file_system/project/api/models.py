@@ -70,7 +70,7 @@ class S3InputFiles(db.Model):
 
     def __init__(self, user_id, filename, url):
         self.user_id = user_id
-        self.input_filename = input_filename
+        self.filename = filename
         self.url = url
 
 class S3ClassifiedFiles(db.Model):
@@ -91,6 +91,6 @@ class S3ClassifiedFiles(db.Model):
     # INPUT FILES IS A LIST OF FILE_ID REFERENCES, FROM S3INPUTFILES TABLE
     def __init__(self, user_id, filename, url, input_files):
         self.user_id = user_id
-        self.input_filename = input_filename
+        self.filename = filename
         self.url = url 
         self.input_files = input_files
