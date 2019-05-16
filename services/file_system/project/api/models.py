@@ -94,3 +94,4 @@ class S3ClassifiedFiles(db.Model):
         self.filename = filename
         self.url = url 
         self.input_files = input_files
+

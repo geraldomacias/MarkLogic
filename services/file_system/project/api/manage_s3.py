@@ -108,14 +108,22 @@ def uploads(user_id, all_files):
         # uploads_response[files + "_URL"] = (download_url + key_name).replace(" ", "+")
         uploads_response[files] = cur_name
         
-        new_row = S3Files(
+        new_row = S3InputFiles(
             user_id = user_id,
-            input_filename = cur_name,
-            input_url = (download_url + key_name).replace(" ", "+")
+            filename = cur_name,
+            url = (download_url + key_name).replace(" ", "+")
         )
-
-        db.session.add(new_row)
-        db.session.commit()
+        
+        try:
+            cur_row = S3InputFiles.query.filter(S3InputFiles.user_id == user_id, 
+                                    S3InputFiles.filename == cur_name).one()
+            if (cur_row.deleted == True):
+                cur_row.deleted = False
+            db.session.flush()
+        except:
+            db.session.add(new_row)
+        finally:
+            db.session.commit()
 
     uploads_response['status'] = 'success'
     uploads_response['status_code'] = 200
@@ -179,11 +187,33 @@ def classified(user_id, values, all_files):
         classified_name = cur_name
         classified_url = (download_url + key_name).replace(" ", "+")
         
-
+    inputs = []
     for values in request.values:
         orig_file = request.values.get(values)
-        current = S3Files.query.filter_by(input_filename = orig_file).first()
-        current.add_classified(classified_name, classified_url)
+        current = S3InputFiles.query.filter_by(filename = orig_file, deleted = False).first()
+        inputs.append(current.file_id)
+    
+    
+    new_row = S3ClassifiedFiles(
+        user_id = user_id,
+        filename = cur_name,
+        url = classified_url,
+        input_files = inputs
+    )
+
+
+    try:
+        cur_row = S3ClassifiedFiles.query.filter(S3ClassifiedFiles.user_id == user_id, 
+                                S3ClassifiedFiles.filename == cur_name).one()
+        if (cur_row.deleted == True):
+            cur_row.deleted = False
+        if (cur_row.input_files != inputs):
+            cur_row.input_files = inputs
+        db.session.flush()
+    except:
+        db.session.add(new_row)
+    finally:
+        db.session.commit()
 
 
     classified_response['status'] = 'success'
@@ -277,10 +307,19 @@ def downloadUploaded(user_id, values):
     if "classified" in values: #Look for classified in DB and get original files
         #make list of file_names
 
-        files = S3Files.query.filter(S3Files.user_id == user_id, S3Files.classified_filename == values.get('classified')).all()
+        files = S3ClassifiedFiles.query.filter(S3ClassifiedFiles.user_id == user_id, 
+                                S3ClassifiedFiles.filename == values.get('classified'), 
+                                S3ClassifiedFiles.deleted == False).one()
+
         orig_list = list()
-        for row in files:
-            orig_list.append(row.input_filename)
+        id_list = files.input_files
+
+        for row in id_list:
+            cur_file = S3InputFiles.query.filter(S3InputFiles.user_id == user_id, 
+                                                S3InputFiles.file_id == row).one()
+
+            if (cur_file.deleted == False):
+                orig_list.append(cur_file.filename)
 
         for orig_file in orig_list:
             responseObject[orig_file] = orig_file
@@ -304,7 +343,9 @@ def downloadUploaded(user_id, values):
     else:
         for value in values:
             orig_file = values.get(value)
-            cur_file = S3Files.query.filter(S3Files.user_id == user_id, S3Files.input_filename == orig_file).all()
+            cur_file = S3InputFiles.query.filter(S3InputFiles.user_id == user_id, 
+                                                S3InputFiles.filename == orig_file, 
+                                                S3InputFiles.deleted == False).all()
             if (len(cur_file) == 0):
                 responseObject['status'] = 'failure'
                 responseObject['status_code'] = '404'
@@ -353,7 +394,9 @@ def downloadClassified(user_id, values):
     for value in values:
         orig_file = values.get(value)
         #FIXME: Not getting the file right. Need to look at DB
-        cur_file = S3Files.query.filter(S3Files.user_id == user_id, S3Files.classified_filename == orig_file).all()
+        cur_file = S3ClassifiedFiles.query.filter(S3ClassifiedFiles.user_id == user_id, 
+                                            S3ClassifiedFiles.filename == orig_file, 
+                                            S3ClassifiedFiles.deleted == False).all()
         if (len(cur_file) == -1):
             responseObject['status'] = 'failure'
             responseObject['status_code'] = '404'
@@ -471,6 +514,137 @@ class DownloadClassifiedAPI(MethodView):
         return make_response(jsonify(response_object)), status_code
 
 
+class DeleteOriginalAPI(MethodView):
+    
+    def get(self):
+        auth_header = request.headers.get('Authorization')
+
+        responseObject = {
+            'status': 'fail',
+            'message': ''
+        }
+
+        status_code = 401
+
+        auth_dict = get_authentication(auth_header)
+        if (auth_dict.get('status_code') != 200):
+            return make_response(jsonify(auth_dict)), auth_dict.get('status_code')
+
+        user_id = auth_dict['user_id']
+       
+        if (len(request.values) == 0):
+            return make_response(jsonify(responseObject)), status_code
+        
+        for value in request.values:
+            fileName = request.values.get(value)
+            responseObject[fileName] = "deleted"
+        
+
+
+        deleted_files = []
+        for value in request.values:
+            fileName = request.values.get(value)
+
+            files = S3InputFiles.query.filter(S3InputFiles.user_id == user_id, 
+            S3InputFiles.filename == fileName, 
+            S3InputFiles.deleted == False).one()
+        
+            files.deleted = True
+            #files.url = "deleted" + files.url + str(files.file_id)
+            responseObject[fileName] = "deleted"
+
+            deleted_files.append(fileName)
+            db.session.commit()
+            file_type = "uploads"
+            bucket_name = os.getenv('S3_UPLOAD')
+
+            key_name = fileName + '.' + user_id + '.' + file_type 
+            
+            client = boto3.client('s3')
+            client.delete_object(
+                Bucket=bucket_name, # name of the bucket
+                Key=key_name
+            )
+
+
+        responseObject['message'] = "Everything is okay :)"
+        responseObject['status'] = "success"
+        responseObject['deleted_files'] = deleted_files
+
+        response_object = {
+            'status': 200,
+            'data': responseObject
+        }
+               
+       
+        return make_response(jsonify(response_object)), status_code
+
+
+class DeleteClassifiedAPI(MethodView):
+    
+    def get(self):
+        auth_header = request.headers.get('Authorization')
+
+        responseObject = {
+            'status': 'fail',
+            'message': ''
+        }
+
+        status_code = 401
+
+        auth_dict = get_authentication(auth_header)
+        if (auth_dict.get('status_code') != 200):
+            return make_response(jsonify(auth_dict)), auth_dict.get('status_code')
+
+        user_id = auth_dict['user_id']
+       
+        if (len(request.values) == 0):
+            return make_response(jsonify(responseObject)), status_code
+        
+        for value in request.values:
+            fileName = request.values.get(value)
+            responseObject[fileName] = "deleted"
+        
+
+        deleted_files = []
+        for value in request.values:
+            fileName = request.values.get(value)
+
+            files = S3ClassifiedFiles.query.filter(S3ClassifiedFiles.user_id == user_id, 
+            S3ClassifiedFiles.filename == fileName, 
+            S3ClassifiedFiles.deleted == False).one()
+        
+            files.deleted = True
+            #files.url = "deleted" + files.url + str(files.file_id)
+            responseObject[fileName] = "deleted"
+
+            deleted_files.append(fileName)
+            db.session.commit()
+            file_type = "classified"
+            bucket_name = os.getenv('S3_CLASSIFIED')
+
+            key_name = fileName + '.' + user_id + '.' + file_type 
+            
+            client = boto3.client('s3')
+            client.delete_object(
+                Bucket=bucket_name, # name of the bucket
+                Key=key_name
+            )
+
+
+        responseObject['message'] = "Everything is okay :)"
+        responseObject['status'] = "success"
+        responseObject['deleted_files'] = deleted_files
+
+        response_object = {
+            'status': 200,
+            'data': responseObject
+        }
+               
+       
+        return make_response(jsonify(response_object)), status_code
+
+        
 class UploadedListAPI(MethodView):
     """
     Returns list of files the user has uploaded
@@ -571,6 +745,8 @@ download_uploaded_view = DownloadUploadedAPI.as_view('download_uploaded_api')
 download_classified_view = DownloadClassifiedAPI.as_view('download_classified_api')
 upload_list_view = UploadedListAPI.as_view('upload_list_api')
 classified_list_view = ClassifiedListAPI.as_view('classified_list_api')
+delete_original_view = DeleteOriginalAPI.as_view('delete_original_view')
+delete_classified_view = DeleteClassifiedAPI.as_view('delete_classified_view')
 
 s3_blueprint.add_url_rule(
     '/s3/uploadClassified',
@@ -602,4 +778,13 @@ s3_blueprint.add_url_rule(
     view_func=classified_list_view,
     methods=['GET']
 )
-
+s3_blueprint.add_url_rule(
+    '/s3/deleteFileOriginal',
+    view_func=delete_original_view,
+    methods=['GET']
+)
+s3_blueprint.add_url_rule(
+    '/s3/deleteFileClassified',
+    view_func=delete_classified_view,
+    methods=['GET']
+)
