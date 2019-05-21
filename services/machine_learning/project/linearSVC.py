@@ -97,7 +97,7 @@ def matchSport(jsonInput, auth_token, app):
     #df_file = cwd + X[0]
 
     # Load the csv file into a pandas dataframe
-    df = pd.read_csv(df_file)
+    df = pd.read_csv(df_file).dropna()
 
     # append a sport column with the predicted sport
     df['sport'] = predicted_sport
