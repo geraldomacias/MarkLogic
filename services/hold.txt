@@ -1,0 +1,8 @@
+machine_learning/project/linearSVC.py
+    ERROR: invalid syntax (<unknown>, line 187)
+machine_learning/project/api/views.py
+    C 20:0 MLStartAPI - C (13)
+    M 25:4 MLStartAPI.post - C (12)
+
+2 blocks (classes, functions, methods) analyzed.
+Average complexity: C (12.5)
