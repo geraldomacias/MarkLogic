@@ -39,9 +39,9 @@ def extract_columns(app, auth_token, file_names) :
         for file in file_names:
             cur_file_column_names = []
             g_param = {file : file}
-            cur_dl = requests.get(url = g_url, headers = g_headers, params = g_param)
+            cur_dl_response = requests.get(url = g_url, headers = g_headers, params = g_param)
             cur_dl_data = cur_dl_response.json()
-            cur_upload_response = dl_data['data']['uploads_response']
+            cur_upload_response = cur_dl_data['data']['uploads_response']
             cur_dl_key = file + "_download_url"
             cur_r = requests.get(url = cur_upload_response[cur_dl_key])
             cur_file_data = cur_r.text
