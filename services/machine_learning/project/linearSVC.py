@@ -8,8 +8,9 @@ import pandas as pd
 import requests
 from sklearn import preprocessing
 from collections import defaultdict
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.svm import LinearSVC
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import HashingVectorizer
 
 """
     jsonInput format
@@ -17,15 +18,8 @@ from sklearn.metrics import accuracy_score
 """
 def matchSport(jsonInput, auth_token, app):
 
-    """
-    f = open('lookforme!!!!!!',"w+")
-    for i in range(10):
-        f.write("This is line %d\r\n" % (i+1))
-    f.close()
-    """
-
     # Load data.json
-    with open('project/data.json') as f:
+    with open('project/data2.json') as f:
         data = json.load(f)
 
     X = []
@@ -36,12 +30,36 @@ def matchSport(jsonInput, auth_token, app):
         for value in element.values():
             Y.append(value)
 
-    # Reshap the dataframe to be ['sport', 'col_name']
+    # Reshape the dataframe to be ['sport', 'col_name']
     data = pd.DataFrame(X, columns=['sport'])
     data['col'] = Y
     data['cop'] = data.sport
 
+
+    # Hashing Vectorizer
+    vectorizer = HashingVectorizer(n_features=(2 ** 5))
+    vec_data = vectorizer.fit_transform(data.col)
+
+    # Set the desired output into a separate dataframe
+    target = data.sport
+
+    # Split data set into train and test sets
+    data_train, data_test, target_train, target_test = \
+                                            train_test_split(\
+                                            vec_data, target,\
+                                            test_size = 0.30,\
+                                            random_state = 10)
+
+
+    # Create an object of the type LinearSVC
+    svc_model = LinearSVC(random_state=0)
+
+    # Train the algorithm on training data
+    trainer = svc_model.fit(data_train, target_train)
+
+
     # Place the json_input into a dataframe df
+    # Create the shape and data for the df
     X = []
     Y = []
     json_in = json.loads(jsonInput)
@@ -50,75 +68,26 @@ def matchSport(jsonInput, auth_token, app):
         for value in json_in[key]:
             Y.append(value)
 
-
+    # Create the dataframe df and places Y-values
     df = pd.DataFrame(Y, columns=['col'])
 
-    # Create the Labelencoder object
-    le = preprocessing.LabelEncoder()
+    # Vectorize the users column names
+    vec_data = vectorizer.fit_transform(df.columns)
+
+    # Store the results
+    results = trainer.predict(vec_data)
 
 
-    # Convert the categorical columns into numeric
-    encode_value = le.fit_transform(data.columns)
-    # encode_value
+    # Sum all the predictions
+    counts = {}
+    for res in results:
+        if res in counts:
+            counts[res] += 1
+        else:
+            counts[res] = 0
 
-    # Convert the categorical columns into numeric
-    for column in ['sport', 'col']:
-        data[column] = le.fit_transform(data[column])
-
-
-    # Create a hashmap of transformed data
-    # {encode_val : "sport"}
-    sport_id = {}
-    for name, group in data.groupby(['sport', 'cop']):
-        sport_id[name[0]] = name[1]
-
-
-    # Set the desired output into a separate dataframe
-    target = data.sport
-
-
-    # Remove the predictive output from the originial dataset
-    data = data.col
-
-    # Reshape data
-    data = data.values.reshape(-1, 1)
-
-
-    # Train test and split
-    from sklearn.model_selection import train_test_split
-
-
-    # Split data set into train and test sets
-    data_train, data_test, target_train, target_test = train_test_split(data, target, test_size = 0.30, random_state = 10)
-
-
-    # Create object of the classifier
-    neigh = KNeighborsClassifier(n_neighbors=3)
-
-    #Train the algorithm
-    neigh.fit(data_train, target_train)
-
-
-    # Predict the response
-    pred = neigh.predict(data_test)
-
-    #cols = pd.read_csv('../../../Downloads/MOCK_DATA_ALT_COLUMN_NAMES.csv').columns
-    cols = df.columns
-
-    # Convert the categorical columns into numeric
-    encode_value = le.fit_transform(cols)
-
-    # Reshape data
-    encode_value = encode_value.reshape(-1, 1)
-
-    # Load K-Nearest Neighbors
-    neigh = KNeighborsClassifier(n_neighbors=4)
-
-    # Use k_nearest neighbors to predict sport
-    pred = neigh.fit(data_train, target_train).predict(encode_value)
-
-    # Reverse map the integer -> sport to reveal prediction
-    predicted_sport = sport_id[max(pred)]
+    # Get the max prediction occurance
+    predicted_sport = max(counts, key=counts.get)
 
     # get the current working directory
     cwd = get_cwd(auth_token, app)
@@ -128,7 +97,7 @@ def matchSport(jsonInput, auth_token, app):
     #df_file = cwd + X[0]
 
     # Load the csv file into a pandas dataframe
-    df = pd.read_csv(df_file)
+    df = pd.read_csv(df_file).dropna()
 
     # append a sport column with the predicted sport
     df['sport'] = predicted_sport

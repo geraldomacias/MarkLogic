@@ -1,0 +1,227 @@
+[
+    {
+        "football": "touchdowns"
+    },
+    {
+        "football": "rushingyards"
+    },
+    {
+        "football": "rushingattempts"
+    },
+    {
+       "football": "yardspercarry"
+    },
+    {
+        "football": "longestrushingrun" 
+    },
+    {
+        "football": "rushingtds" 
+    },
+    {
+        "football": "receptions" 
+    },
+    {
+        "football": "receivingyards" 
+    },
+    {
+        "football": "yardsperreception" 
+    },
+    {
+        "football": "longestreception" 
+    },
+    {
+        "football": "receivingtds" 
+    },
+    {
+        "football": "fumbles" 
+    },
+    {
+        "football": "fumbleslost" 
+    },
+    {
+        "football": "firstdownreceptions" 
+    },
+    {
+        "football": "kickoffyards" 
+    },
+    {
+        "basketball": "points"
+    },
+    {
+        "basketball": "assists"
+    },
+    {
+        "basketball": "steals"
+    },
+    {
+        "basketball": "blocks"
+    },
+    {
+        "basketball": "rebounds"
+    },
+    {
+        "basketball": "fg%"
+    },
+    {
+        "basketball": "threepointers"
+    },
+    {
+        "basketball": "threepoint%"
+    },
+    {
+        "basketball": "offensiverebounds"
+    },
+    {
+        "basketball": "pointspergame"
+    },
+    {
+        "basketball": "reboundspergame"
+    },
+    {
+        "basketball": "assistspergame"
+    },
+    {
+        "basketball": "fouls"
+    },
+    {
+        "basketball": "blocks"
+    },
+    {
+        "basketball": "blockspergame"
+    },
+    {
+        "baseball": "games"
+    },
+    {
+        "baseball": "atbats"
+    },
+    {
+        "baseball": "runs"
+    },
+    {
+        "baseball": "hits"
+    },
+    {
+        "baseball": "homeruns"
+    },
+    {
+        "baseball": "rbi"
+    },
+    {
+        "baseball": "obp"
+    },
+    {
+        "baseball": "slg"
+    },
+    {
+        "baseball": "ops"
+    },
+    {
+        "baseball": "era"
+    },
+    {
+        "baseball": "so"
+    },
+    {
+        "baseball": "bb"
+    },
+    {
+        "baseball": "sb"
+    },
+    {
+        "baseball": "cs"
+    },
+    {
+        "baseball": "avg"
+    },
+    {
+        "soccer": "apps"
+    },
+    {
+        "soccer": "mins"
+    },
+    {
+        "soccer": "goals"
+    },
+    {
+        "soccer": "assists"
+    },
+    {
+        "soccer": "yel"
+    },
+    {
+        "soccer": "red"
+    },
+    {
+        "soccer": "spg"
+    },
+    {
+        "soccer": "ps%"
+    },
+    {
+        "soccer": "tackles"
+    },
+    {
+        "soccer": "shots"
+    },
+    {
+        "soccer": "interceptions"
+    },
+    {
+        "soccer": "offsides"
+    },
+    {
+        "soccer": "fouls"
+    },
+    {
+        "soccer": "keyp"
+    },
+    {
+        "soccer": "disp"
+    },
+    {
+        "hockey": "points"
+    },
+    {
+        "hockey": "wins"
+    },
+    {
+        "hockey": "penaltyminutes"
+    },
+    {
+        "hockey": "goals"
+    },
+    {
+        "hockey": "save%"
+    },
+    {
+        "hockey": "plusminusrating"
+    },
+    {
+        "hockey": "shutouts"
+    },
+    {
+        "hockey": "intigator"
+    },
+    {
+        "hockey": "fightingmajors"
+    },
+    {
+        "hockey": "goalsagainstaverage"
+    },
+    {
+        "hockey": "penaltyminutespergame"
+    },
+    {
+        "hockey": "fightspergame"
+    },
+    {
+        "hockey": "powerplaygoals"
+    },
+    {
+        "hockey": "pointspergame"
+    },
+    {
+        "hockey": "powerplaypercentage"
+    }
+]

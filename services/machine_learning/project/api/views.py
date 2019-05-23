@@ -80,7 +80,7 @@ class MLStartAPI(MethodView):
                             }
                             return make_response(jsonify(responseObject)), 401
                     # Check the user's status - make sure its "Waiting for files."
-                    if status.status == 'Waiting for files.' or status.status == 'Completed.':
+                    if status.status == 'Waiting for files.' or status.status == 'Completed.' or status.status == "Failed to process files.":
                         status.selected_files = files
                         status.status = 'Processing.'
                         db.session.commit()
@@ -172,9 +172,16 @@ class MLStatusAPI(MethodView):
                             'message': 'Some error occurred. Please try again.'
                         }
                         return make_response(jsonify(responseObject)), 401
+                if status == 'Failed to process files.':
+                    responseObject = {
+                        'status': 'success',
+                        'message': status.status,
+                        'error_msg': status.error_msg
+                    }
+                    return make_response(jsonify(responseObject)), 200
                 responseObject = {
-                    'status': 'success',
-                    'message': status.status
+                        'status': 'success',
+                        'message': status.status
                 }
                 return make_response(jsonify(responseObject)), 200
             else:

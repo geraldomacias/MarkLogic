@@ -63,6 +63,7 @@ class MLStatus(db.Model):
 
     user_id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(128), nullable=False)
+    error_msg = db.Column(db.String(128), nullable=True)
     selected_files = db.Column(ARRAY(db.String(128)), nullable=True)
     working_directory = db.Column(db.String(500), nullable=True)
     classified_json = db.Column(JSON, nullable=True)

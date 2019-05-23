@@ -23,6 +23,7 @@ def extract_columns(app, auth_token, file_names) :
         os.makedirs(abs_path)
     except OSError:
         print ("Creation of the directory %s failed\n" % create_folder)
+        set_status_error(app, auth_token, "Creation of temporary local directory has failed")
     else:
         #print ("Successfully created the directory, adding it to the db %s\n" % create_folder)
         insert_cwd(app, auth_token, abs_path)
@@ -32,7 +33,7 @@ def extract_columns(app, auth_token, file_names) :
     g_headers = {"Authorization" : 'Bearer ' + auth_token}
     #get only the data for first file in file name list
     if not file_names:
-        print("List of given file names is empty")
+        set_status_error(app, auth_token, "List of files to operate on is empty")
     else:
         f = file_names[0]
         g_param = {f : f}
@@ -44,7 +45,7 @@ def extract_columns(app, auth_token, file_names) :
         #parse data and gather column names while file is open, if valid
         file_data = r.text
         if file_data == None:
-            print("No valid file data found\n")
+            set_status_error(app, auth_token, "No valid file data found in response")
         else:
             #print("File data retrieved writing to directory\n")
             col_names = []
@@ -78,3 +79,22 @@ def insert_cwd(app, auth_token, cwd):
         status.working_directory = cwd
 
         db.session.commit()
+
+def set_status_error(app, auth_token, error):
+    with app.app_context():
+        resp = decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            # auth_token isn't valid anymore - that's not good
+            print(resp)
+        status = MLStatus.query.filter_by(user_id=resp).first()
+        if not status:
+            # Can't find user in status DB - that's not good
+            print("Cannot find user in status DB")
+        status.status = "Failed to process files."
+        status.error_msg = error 
+
+        db.session.commit()
+        return
+
+
+
