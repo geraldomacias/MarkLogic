@@ -19,17 +19,16 @@ from sklearn.feature_extraction.text import HashingVectorizer
 def matchSport(jsonInput, auth_token, app):
     current_classification = classifier(jsonInput, auth_token, app)
     data = current_classification.get_data()
-    trainer = current_classification.train_classifier(data)
+    vectorizer = current_classification.get_vectorizer(data)
+    trainer = current_classification.train_classifier(vectorizer, data)
     df = current_classification.create_user_dataframe(jsonInput)
-    results = current_classification.calculate_results(df, trainer)
+    results = current_classification.calculate_results(vectorizer, df, trainer)
     predicted_sport = current_classification.get_predicted_sport(results)
     cwd = current_classification.get_current_working_directory(auth_token, app)
     file = current_classification.get_uploaded_file(cwd)
-    json_frame = current_classification.append_classified_field(file)
+    json_frame = current_classification.append_classified_field(predicted_sport, file)
     filepath = current_classification.save_classified_file(cwd, json_frame)
     current_classification.update_endpoints(filepath, auth_token, app, json_frame)
-
-
 
 
 
@@ -44,7 +43,7 @@ class classifier:
         self.auth_token = auth_token
         self.app = app
 
-    def get_data():
+    def get_data(self):
         # Load data.json
         with open('project/data2.json') as f:
             data = json.load(f)
@@ -64,9 +63,12 @@ class classifier:
             data['cop'] = data.sport
             return data
 
-    def train_classifier(data):
+    def get_vectorizer(self, data):
+        return HashingVectorizer(n_features=(2 ** 5))
+
+
+    def train_classifier(self, vectorizer, data):
         # Hashing Vectorizer
-        vectorizer = HashingVectorizer(n_features=(2 ** 5))
         vec_data = vectorizer.fit_transform(data.col)
 
         # Set the desired output into a separate dataframe
@@ -87,7 +89,7 @@ class classifier:
 
 
 
-    def create_user_dataframe(jsonInput):
+    def create_user_dataframe(self, jsonInput):
         # Place the json_input into a dataframe df
         # Create the shape and data for the df
         X = []
@@ -98,12 +100,13 @@ class classifier:
             for value in json_in[key]:
                 Y.append(value)
 
+        self.X = X
         # Create the dataframe df and places Y-values
         return pd.DataFrame(Y, columns=['col'])
 
 
 
-    def calculate_results(df, trainer):
+    def calculate_results(self, vectorizer, df, trainer):
         # Vectorize the users column names
         vec_data = vectorizer.fit_transform(df.columns)
 
@@ -112,7 +115,7 @@ class classifier:
 
 
 
-    def get_predicted_sport(results):
+    def get_predicted_sport(self, results):
         # Sum all the predictions
         counts = {}
         for res in results:
@@ -125,18 +128,18 @@ class classifier:
         return max(counts, key=counts.get)
 
 
-    def get_current_working_directory(auth_token, app):
+    def get_current_working_directory(self, auth_token, app):
         # get the current working directory
         return get_cwd(auth_token, app)
 
 
-    def get_uploaded_file(cwd):
+    def get_uploaded_file(self, cwd):
         # Get the file location
-        return cwd + '/' + X[0]
+        return cwd + '/' + self.X[0]
         #df_file = cwd + X[0]
 
 
-    def append_classified_field(df_file):
+    def append_classified_field(self, predicted_sport, df_file):
         # Load the csv file into a pandas dataframe
         df = pd.read_csv(df_file).dropna()
 
@@ -154,7 +157,7 @@ class classifier:
             if df[col].dtype == 'int64':
                 spec_cols.append(col)
 
-        # Make a dictiionary which contains all players
+        # Make a dictionary which contains all players
         # For each player
         for i in range(rows):
             player = {}
@@ -162,16 +165,16 @@ class classifier:
             for col in columns:
                 # Typecast int64 to int
                 if col in spec_cols:
-                    player[col] = int(df.loc[i][col])
+                    player[col] = int(df.iloc[i][col])
                 else:
-                    player[col] = df.loc[i][col]
+                    player[col] = df.iloc[i][col]
             players.append(player)
 
         # save the dataframe into a json object
         return json.dumps(players)
 
 
-    def save_classified_file(cwd, json_frame):
+    def save_classified_file(self, cwd, json_frame):
         # Save the classified file to the cwd
         filepath = cwd + '/' + 'classified.json'
         with open(filepath, 'w+') as json_file:
@@ -179,7 +182,7 @@ class classifier:
         return filepath
 
 
-    def update_endpoints(filepath, auth_token, app, json_frame):
+    def update_endpoints(self, filepath, auth_token, app, json_frame):
         # Open the saved file
         files = {'classifed': open(filepath, 'rb')}
 
