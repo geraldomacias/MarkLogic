@@ -129,16 +129,21 @@ def matchSport(jsonInput, auth_token, app):
     # save the dataframe into a json object
     json_frame = json.dumps(players)
 
+    # Get selected files from db
+    selected_files = get_values(auth_token, app)
+
     # Save the classified file to the cwd
-    filepath = cwd + '/' + 'classified.json'
+    filepath = cwd + '/' + 'classified'
+    for file_name in selected_files:
+        filepath = filepath + '_' + file_name
+    filepath = filepath + '.json'
     with open(filepath, 'w+') as json_file:
         json.dump(json_frame, json_file)
 
     # Open the saved file
     files = {'classifed': open(filepath, 'rb')}
 
-    # Get selected files from db
-    selected_files = get_values(auth_token, app)
+    
 
     # Can loop to produce multiple files
     values = {'file1': selected_files[0]}
