@@ -3,6 +3,7 @@ from project import db
 from project.api.models import decode_auth_token, MLStatus
 
 # Machine learning
+import sys
 import json
 import pandas as pd
 import requests
@@ -22,7 +23,7 @@ def matchSport(jsonInput, auth_token, app):
     vectorizer = current_classification.get_vectorizer(data)
     trainer = current_classification.train_classifier(vectorizer, data)
     df = current_classification.create_user_dataframe(jsonInput)
-    results = current_classification.calculate_results(vectorizer, df, trainer)
+    results = current_classification.calculate_results(trainer)
     (predicted_sport, confidence) = current_classification.get_predicted_sport(results)
     cwd = current_classification.get_current_working_directory(auth_token, app)
     file = current_classification.get_uploaded_file(cwd)
@@ -45,7 +46,7 @@ class classifier:
 
     def get_data(self):
         # Load data.json
-        with open('project/data.json') as f:
+        with open('project/data2.json') as f:
             data = json.load(f)
 
             # Convert json objects into python matrix
@@ -64,12 +65,13 @@ class classifier:
             return data
 
     def get_vectorizer(self, data):
-        return HashingVectorizer(n_features=(2 ** 5))
+        return HashingVectorizer(n_features=2**4)
 
 
     def train_classifier(self, vectorizer, data):
         # Hashing Vectorizer
         vec_data = vectorizer.fit_transform(data.col)
+        self.vec_data = vec_data
 
         # Set the desired output into a separate dataframe
         target = data.sport
@@ -79,12 +81,13 @@ class classifier:
                                                 train_test_split(\
                                                 vec_data, target,\
                                                 test_size = 0.30,\
-                                                random_state = 10)
+                                                random_state = 3)
 
         # Create an object of the type LinearSVC
         svc_model = LinearSVC(random_state=0)
 
         # Train the algorithm on training data
+        # Returns trainer
         return svc_model.fit(data_train, target_train)
 
 
@@ -106,12 +109,9 @@ class classifier:
 
 
 
-    def calculate_results(self, vectorizer, df, trainer):
-        # Vectorize the users column names
-        vec_data = vectorizer.fit_transform(df.columns)
-
+    def calculate_results(self, trainer):
         # Store the results
-        return trainer.predict(vec_data)
+        return trainer.predict(self.vec_data)
 
 
 
@@ -128,11 +128,13 @@ class classifier:
         # for the predicted results
         summation = sum(counts.values())
         maximum = max(counts.values())
-        confidence = summation / maximum * 100
+        if maximum == 0:
+            confidence = 0
+        else:
+            confidence = summation / maximum * 100
 
         # Get the predicted sport
-        #predicted_sport = max(counts, key=counts.get)
-        predicted_sport = counts[maximum]
+        predicted_sport = max(counts, key=counts.get)
 
         # Get the max prediction occurance
         return (predicted_sport, confidence)
@@ -146,7 +148,6 @@ class classifier:
     def get_uploaded_file(self, cwd):
         # Get the file location
         return cwd + '/' + self.X[0]
-        #df_file = cwd + X[0]
 
 
     def append_classified_field(self, predicted_sport, confidence, df_file):
@@ -154,10 +155,10 @@ class classifier:
         df = pd.read_csv(df_file).dropna()
 
         # append a sport column with the predicted sport
-        df['sport'] = predicted_sport
+        df['predicted_sport'] = predicted_sport
 
         # append the confidence level with the predicted
-        df['confidence'] = confidence
+        df['prediction_confidence'] = confidence
 
         # Formatting for player cards
         rows = df.shape[0]
