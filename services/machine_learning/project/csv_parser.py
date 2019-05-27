@@ -7,6 +7,7 @@ from io import StringIO
 from project.api.models import decode_auth_token, MLStatus
 from project.linearSVC import matchSport
 from project import db
+from flask import current_app
 
 def get_fake_response_link(*args, key, g_headers, file):
     class MockResponse:
@@ -35,43 +36,66 @@ def get_fake_response_file(*args, key):
     else:
         return MockResponse(None, 404)
 
-def get_dl_link(g_url, g_headers, g_param):
-    link = requests.get(url = g_url, headers = g_headers, params = g_param)
-    return link
+def get_dl_link(g_url, g_headers, g_param, app, auth_token):
+    if app.config.get('TESTING'):
+        class MockResponse:
+            def __init__(self, json_data, status_code):
+                self.json_data = json_data
+                self.status_code = status_code
 
-def get_dl_file(cur_upload_response, cur_dl_key):
-    file =  requests.get(url = cur_upload_response[cur_dl_key])
-    return file
+            def json(self):
+                return self.json_data
+    else:
+        link = requests.get(url = g_url, headers = g_headers, params = g_param)
+        if link:
+            link_data = link.json()
+            link_response = link_data['data']['uploads_response']
+            return link_response
+        else:
+            set_status_error(app, auth_token, "No valid file url found in response")
 
-def process_and_write_file(cur_file_data, file, abs_path, files_with_names)
+def get_dl_file(url_data, cur_dl_key, app, auth_token):
+    if app.config.get('TESTING'):
+        class MockResponse:
+            def __init__(self, json_data, status_code):
+                self.json_data = json_data
+                self.status_code = status_code
+
+            def json(self):
+                return self.json_data
+    else:
+        file =  requests.get(url = url_data[cur_dl_key])
+        if file:
+            return file.text
+        else:
+            set_status_error(app, auth_token, "No valid file data found in response")
+
+def process_and_write_file(cur_file_data, file, abs_path, files_with_names):
     cur_file_column_names = []
-        cur_buf = StringIO(cur_file_data)
-        cur_first_line = cur_buf.readline()
-        cur_splitted = cur_first_line.split(',')
-        for word in cur_splitted:
-            cur_processed = (word.strip()).lower()
-            cur_file_column_names.append(cur_processed)
-        files_with_names[file] = cur_file_column_names
-        write_file_loc = abs_path + file
-        with open(write_file_loc, 'w') as wFile:
-            wFile.write()
+    cur_buf = StringIO(cur_file_data)
+    cur_first_line = cur_buf.readline()
+    cur_splitted = cur_first_line.split(',')
+    for word in cur_splitted:
+        cur_processed = (word.strip()).lower()
+        cur_file_column_names.append(cur_processed)
+    files_with_names[file] = cur_file_column_names
+    write_file_loc = abs_path + file
+    with open(write_file_loc, 'w') as wFile:
+        wFile.write()
 
-def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names)
+def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names):
     cur_file_column_names = []
     g_param = {file : file}
-    cur_dl_response = get_dl_link(g_url, g_headers, g_param)
-    cur_dl_data = cur_dl_response.json()
-    cur_upload_response = cur_dl_data['data']['uploads_response']
+    url_data = get_dl_link(g_url, g_headers, g_param, app, auth_token)
     cur_dl_key = file + "_download_url"
-    cur_r = get_dl_file(cur_upload_response, cur_dl_key)
-    cur_file_data = cur_r.text
+    cur_r = get_dl_file(url_data, cur_dl_key, app, auth_token)
     #parse file data and gather column names while file is open, if valid
     if cur_file_data == None:
         set_status_error(app, auth_token, "No valid file data found in response")
     else:
-        process_and_write_file(cur_file_data, file, abs_path, files_with_names)
+        process_and_write_file(cur_r, file, abs_path, files_with_names)
 
-def create_temp_directory(abs_path, create_folder, app, auth_token)
+def create_temp_directory(abs_path, create_folder, app, auth_token):
     #create directory
     try:
         os.makedirs(abs_path)
@@ -92,7 +116,8 @@ def extract_columns(app, auth_token, file_names):
     rand_file_num = random.randint(1000, 9999)
     create_folder = str(rand_file_num)+ "_temp_files/"
     #print("Create Folder: " + create_folder + "\n")
-    create_temp_directory("/temp/" + create_folder, create_folder, app, auth_token)
+    abs_path = "/temp/" + create_folder
+    create_temp_directory(abs_path, create_folder, app, auth_token)
     #get only the data for first file in file name list
     if not file_names:
         set_status_error(app, auth_token, "List of files to operate on is empty")
@@ -120,7 +145,6 @@ def insert_cwd(app, auth_token, cwd):
         status.working_directory = cwd
 
         db.session.commit()
-int fake_file_num = 0
 
 def fake_aws_get():
     the_response = Response()
