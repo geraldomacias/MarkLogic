@@ -207,8 +207,6 @@ class classifier:
 
 
 
-
-
 def jake_point(files, values, auth_token):
     g_headers = {"Authorization": 'Bearer ' + auth_token}
     url = 'http://file_system:5000/s3/uploadClassified'
