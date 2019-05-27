@@ -27,7 +27,7 @@ def matchSport(jsonInput, auth_token, app):
     cwd = current_classification.get_current_working_directory(auth_token, app)
     file = current_classification.get_uploaded_file(cwd)
     json_frame = current_classification.append_classified_field(predicted_sport, confidence, file)
-    filepath = current_classification.save_classified_file(cwd, json_frame)
+    filepath = current_classification.save_classified_file(cwd, json_frame, auth_token, app)
     current_classification.update_endpoints(filepath, auth_token, app, json_frame)
 
 
@@ -187,9 +187,16 @@ class classifier:
         return json.dumps(players)
 
 
-    def save_classified_file(self, cwd, json_frame):
+    def save_classified_file(self, cwd, json_frame, auth_token, app):
         # Save the classified file to the cwd
-        filepath = cwd + '/' + 'classified.json'
+        selected_files = get_values(auth_token, app)
+
+        # Build name from selected_files
+        filepath = cwd + '/' + 'classified'
+        for file_name in selected_files:
+            filepath = filepath + '_' + file_name
+        filepath = filepath + '.json'
+
         with open(filepath, 'w+') as json_file:
             json.dump(json_frame, json_file)
         return filepath
@@ -210,8 +217,6 @@ class classifier:
 
         # update the status with the json_frame
         update_status(auth_token, app, json_frame)
-
-
 
 
 

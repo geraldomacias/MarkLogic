@@ -458,3 +458,143 @@ class TestGetClassified(BaseTestCase):
             self.assertTrue(data['message'] == 'Returning classified information.')
             self.assertTrue(json_data['omg'] == '123')
             self.assertEqual(response.status_code, 200)
+
+class TestGetPastClassifiedAsJson(BaseTestCase):
+    """Tests to ensure getting past classifications as json works."""
+
+    def test_getpastclassifiedasjson_no_auth(self):
+        """Test for getting past classified json with no provided token"""
+        with self.client:
+            response = self.client.get(
+                '/ml/past_classified_json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Provide a valid auth token.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_getpastclassifiedasjson_malformed_bearer(self):
+        """Test for getting past classified json with malformed bearer token."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.get(
+                '/ml/past_classified_json',
+                headers=dict(
+                    Authorization='Bearer' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Bearer token malformed.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_getpastclassifiedasjson_blacklisted_token(self):
+        """Test for getting past classified json with blacklisted token."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # Blacklist a valid token
+            blacklist_token = BlacklistToken(auth_token.decode())
+            db.session.add(blacklist_token)
+            db.session.commit()
+            # blacklisted token request
+            response = self.client.get(
+                '/ml/past_classified_json',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Token blacklisted. Please log in again.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_getpastclassifiedasjson_expired_token(self):
+        """Test for getting past classified json with expired token."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            # wait for token to be invalidated
+            time.sleep(6)
+            response = self.client.get(
+                '/ml/past_classified_json',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Signature expired. Please log in again.')
+            self.assertEqual(response.status_code, 401)
+
+    def test_getpastclassifiedasjson_no_files(self):
+        """Test for getting past classified json with no json data provided."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.get(
+                '/ml/past_classified_json',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                )
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'File name not provided.')
+            self.assertTrue(response.status_code, 400)
+
+    def test_getpastclassifiedasjson_bad_filename(self):
+        """Test for getting past classified json with no 'file_name' key provided."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.get(
+                '/ml/past_classified_json',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                ),
+                data=json.dumps(dict(
+                    test='bad'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'File name not provided.')
+            self.assertEqual(response.status_code, 400)
+
+    def test_getpastclassifiedasjson_bad_download_url(self):
+        """Test for getting past classified json with bad generated url."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.get(
+                '/ml/past_classified_json',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                ),
+                data=json.dumps(dict(
+                    file_name='bad_download_code'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Bad response from download url. Please try downloading again, or classify your csv again.')
+            self.assertEqual(response.status_code, 404)
+
+    def test_getpastclassifiedasjson(self):
+        """Test for getting past classified json."""
+        with self.client:
+            auth_token = encode_auth_token(1)
+            response = self.client.get(
+                '/ml/past_classified_json',
+                headers=dict(
+                    Authorization='Bearer ' + auth_token.decode()
+                ),
+                data=json.dumps(dict(
+                    file_name='test'
+                )),
+                content_type='application/json'
+            )
+            data = json.loads(response.data.decode())
+            json_data = data['data']
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Returning classified information.')
+            self.assertTrue(json_data['test_data'] == 123)
+            self.assertEqual(response.status_code, 200)
