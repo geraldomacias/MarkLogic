@@ -465,7 +465,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
     def test_getpastclassifiedasjson_no_auth(self):
         """Test for getting past classified json with no provided token"""
         with self.client:
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json'
             )
             data = json.loads(response.data.decode())
@@ -477,7 +477,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
         """Test for getting past classified json with malformed bearer token."""
         with self.client:
             auth_token = encode_auth_token(1)
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json',
                 headers=dict(
                     Authorization='Bearer' + auth_token.decode()
@@ -497,7 +497,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
             db.session.add(blacklist_token)
             db.session.commit()
             # blacklisted token request
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json',
                 headers=dict(
                     Authorization='Bearer ' + auth_token.decode()
@@ -514,7 +514,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
             auth_token = encode_auth_token(1)
             # wait for token to be invalidated
             time.sleep(6)
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json',
                 headers=dict(
                     Authorization='Bearer ' + auth_token.decode()
@@ -529,7 +529,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
         """Test for getting past classified json with no json data provided."""
         with self.client:
             auth_token = encode_auth_token(1)
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json',
                 headers=dict(
                     Authorization='Bearer ' + auth_token.decode()
@@ -544,7 +544,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
         """Test for getting past classified json with no 'file_name' key provided."""
         with self.client:
             auth_token = encode_auth_token(1)
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json',
                 headers=dict(
                     Authorization='Bearer ' + auth_token.decode()
@@ -563,7 +563,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
         """Test for getting past classified json with bad generated url."""
         with self.client:
             auth_token = encode_auth_token(1)
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json',
                 headers=dict(
                     Authorization='Bearer ' + auth_token.decode()
@@ -582,7 +582,7 @@ class TestGetPastClassifiedAsJson(BaseTestCase):
         """Test for getting past classified json."""
         with self.client:
             auth_token = encode_auth_token(1)
-            response = self.client.get(
+            response = self.client.post(
                 '/ml/past_classified_json',
                 headers=dict(
                     Authorization='Bearer ' + auth_token.decode()

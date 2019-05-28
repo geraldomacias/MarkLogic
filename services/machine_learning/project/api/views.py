@@ -274,7 +274,7 @@ class MLGetPastClassifiedAsJson(MethodView):
     Return a Past Classification as JSON
     """
 
-    def get(self):
+    def post(self):
         # get the auth token
         auth_header = request.headers.get('Authorization')
         if auth_header:
@@ -387,5 +387,5 @@ ml_blueprint.add_url_rule(
 ml_blueprint.add_url_rule(
     '/ml/past_classified_json',
     view_func=ml_get_past_classified_json_view,
-    methods=['GET']
+    methods=['POST']
 )
