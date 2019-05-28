@@ -131,7 +131,7 @@ class classifier:
         if maximum == 0:
             confidence = 0
         else:
-            confidence = summation / maximum * 100
+            confidence = summation / maximum
 
         # Get the predicted sport
         predicted_sport = max(counts, key=counts.get)
@@ -158,7 +158,7 @@ class classifier:
         df['predicted_sport'] = predicted_sport
 
         # append the confidence level with the predicted
-        df['prediction_confidence'] = confidence
+        df['prediction_confidence%'] = confidence
 
         # Formatting for player cards
         rows = df.shape[0]
@@ -166,7 +166,7 @@ class classifier:
         spec_cols = []
         players = []
 
-        # Get all special int64 columns
+        # Get all special int64 column names
         for col in columns:
             if df[col].dtype == 'int64':
                 spec_cols.append(col)
@@ -222,7 +222,7 @@ class classifier:
 
 
 def jake_point(files, values, auth_token):
-    g_headers = {"Authorization": 'Bearer ' + auth_token}
+    g_headers = {'Authorization': 'Bearer ' + auth_token}
     url = 'http://file_system:5000/s3/uploadClassified'
     r = requests.post(url, files=files, data=values, headers=g_headers)
 
