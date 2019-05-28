@@ -131,7 +131,7 @@ class classifier:
         if maximum == 0:
             confidence = 0
         else:
-            confidence = summation / maximum
+            confidence = maximum / summation * 100
 
         # Get the predicted sport
         predicted_sport = max(counts, key=counts.get)
