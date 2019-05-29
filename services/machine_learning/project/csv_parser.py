@@ -83,7 +83,7 @@ def process_and_write_file(cur_file_data, file, abs_path, files_with_names, app,
     files_with_names[file] = cur_file_column_names
     write_file_loc = abs_path + file
     with open(write_file_loc, 'w') as wFile:
-        wFile.write()
+        wFile.write(cur_file_data)
 
 def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names):
     cur_file_column_names = []
@@ -92,7 +92,7 @@ def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_n
     cur_dl_key = file + "_download_url"
     cur_r = get_dl_file(url_data, cur_dl_key, app, auth_token)
     #parse file data and gather column names while file is open, if valid
-    if cur_file_data == None:
+    if cur_r == None:
         set_status_error(app, auth_token, "No valid file data found in response")
     else:
         process_and_write_file(cur_r, file, abs_path, files_with_names, app, auth_token)
@@ -130,7 +130,7 @@ def extract_columns(app, auth_token, file_names):
         #iterate through all files in given file list and parse column names for each
         for file in file_names: 
             files_with_names[file] = extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names)
-    matchSport(json.dumps(file_with_names), auth_token, app)
+    matchSport(json.dumps(files_with_names), auth_token, app)
     #remove temp files after all the files are parsed
 
 def insert_cwd(app, auth_token, cwd):
