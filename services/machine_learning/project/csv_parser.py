@@ -3,6 +3,7 @@ import io
 import random
 import json
 import requests
+import shutil
 from io import StringIO
 from project.api.models import decode_auth_token, MLStatus
 from project.linearSVC import matchSport
@@ -132,8 +133,10 @@ def extract_columns(app, auth_token, file_names):
         for file in file_names: 
             files_with_names[file] = extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names)
     matchSport(json.dumps(files_with_names), auth_token, app)
-    if os.path.isfile(create_folder):
-        shutil.rmtree(create_folder)
+    try:
+        shutil.rmtree(abs_path)
+    except OSError as e:
+       set_status_error(app, auth_token, "Unable to delete temporary file") 
 
     #remove temp files after all the files are parsed
 
