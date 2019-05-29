@@ -70,11 +70,13 @@ def get_dl_file(url_data, cur_dl_key, app, auth_token):
         else:
             set_status_error(app, auth_token, "No valid file data found in response")
 
-def process_and_write_file(cur_file_data, file, abs_path, files_with_names):
+def process_and_write_file(cur_file_data, file, abs_path, files_with_names, app, auth_token):
     cur_file_column_names = []
     cur_buf = StringIO(cur_file_data)
     cur_first_line = cur_buf.readline()
     cur_splitted = cur_first_line.split(',')
+    if len(cur_splitted) == 0:
+        set_status_error(app, auth_token, "Given CSV is empty")
     for word in cur_splitted:
         cur_processed = (word.strip()).lower()
         cur_file_column_names.append(cur_processed)
@@ -93,7 +95,7 @@ def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_n
     if cur_file_data == None:
         set_status_error(app, auth_token, "No valid file data found in response")
     else:
-        process_and_write_file(cur_r, file, abs_path, files_with_names)
+        process_and_write_file(cur_r, file, abs_path, files_with_names, app, auth_token)
 
 def create_temp_directory(abs_path, create_folder, app, auth_token):
     #create directory
