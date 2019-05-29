@@ -84,6 +84,7 @@ def process_and_write_file(cur_file_data, file, abs_path, files_with_names, app,
     write_file_loc = abs_path + file
     with open(write_file_loc, 'w') as wFile:
         wFile.write(cur_file_data)
+    return cur_file_column_names
 
 def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names):
     cur_file_column_names = []
@@ -95,7 +96,7 @@ def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_n
     if cur_r == None:
         set_status_error(app, auth_token, "No valid file data found in response")
     else:
-        process_and_write_file(cur_r, file, abs_path, files_with_names, app, auth_token)
+        return process_and_write_file(cur_r, file, abs_path, files_with_names, app, auth_token)
 
 def create_temp_directory(abs_path, create_folder, app, auth_token):
     #create directory
@@ -131,6 +132,9 @@ def extract_columns(app, auth_token, file_names):
         for file in file_names: 
             files_with_names[file] = extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names)
     matchSport(json.dumps(files_with_names), auth_token, app)
+    if os.path.isfile(create_folder):
+        shutil.rmtree(create_folder)
+
     #remove temp files after all the files are parsed
 
 def insert_cwd(app, auth_token, cwd):
@@ -147,13 +151,6 @@ def insert_cwd(app, auth_token, cwd):
         status.working_directory = cwd
 
         db.session.commit()
-
-def fake_aws_get():
-    the_response = Response()
-    the_response.code = "expired"
-    the_response.error_type = "expired"
-    the_response.status_code = 400
-    the_response._content = b'{ "key" : "a" }'
 
 def set_status_error(app, auth_token, error):
     with app.app_context():
