@@ -14,16 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import json
-import unittest
-import time
-import jwt
-
-from project.api.models import BlacklistToken, decode_auth_token
-from project.tests.base import BaseTestCase
-
+# services/machine_learning/project/tests/test_csv_parse.py
 from flask import current_app
-
+import unittest
 
 def encode_auth_token(user_id):
     """
@@ -43,9 +36,3 @@ def encode_auth_token(user_id):
         )
     except Exception as e:
         return e
-
-
-
-
-
-# class TestFileUpload(BaseTestCode):

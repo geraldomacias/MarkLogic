@@ -1,23 +1,121 @@
+"""
+Copyright 2019 Team Mark
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
 import os
 import io
 import random
 import json
 import requests
+import shutil
 from io import StringIO
 from project.api.models import decode_auth_token, MLStatus
 from project.linearSVC import matchSport
 from project import db
+from flask import current_app
 
-#pass user ID (Auth token) and FileNames => output list of lists? dictionary?
-#need duplicates to help confidence to matching to a sport
-def extract_columns(app, auth_token, file_names) :
-    file_with_names = {}
-    cur_path = os.getcwd()
-    #generate random number for temp csv storage folder
-    rand_file_num = random.randint(1000, 9999)
-    create_folder = str(rand_file_num)+ "_temp_files/"
-    #print("Create Folder: " + create_folder + "\n")
-    abs_path = "/temp/" + create_folder
+def get_fake_response_link(*args, key, g_headers, file):
+    class MockResponse:
+        def __init__(self, json_data, status_code):
+            self.json_data = json_data
+            self.status_code = status_code
+
+        def json(self):
+            return self.json_data
+    if (args[0] == 'http://file_system:5000/s3/downloadUploaded') and (g_headers['Authorization'] == "Bearer 123456789") and (g_params == {file : file}):
+        return MockResponse({"key1": "http://fakeurl"}, 200)
+    else:
+        return MockResponse(None, 404)
+
+def get_fake_response_file(*args, key):
+    class MockResponse:
+        def __init__(self, json_data, status_code):
+            self.json_data = json_data
+            self.status_code = status_code
+            self.test = "first name, last name, jersey number, position, hometown, tackles, touchdowns, rushing yards, passing yards"
+
+        def json(self):
+            return self.json_data
+    if (args[0] == 'http://someurl.com/downloadFile') and (key == "test_file_download_url"):
+        return MockResponse({"key1": "value1"}, 200)
+    else:
+        return MockResponse(None, 404)
+
+def get_dl_link(g_url, g_headers, g_param, app, auth_token):
+    if app.config.get('TESTING'):
+        class MockResponse:
+            def __init__(self, json_data, status_code):
+                self.json_data = json_data
+                self.status_code = status_code
+
+            def json(self):
+                return self.json_data
+    else:
+        link = requests.get(url = g_url, headers = g_headers, params = g_param)
+        if link:
+            link_data = link.json()
+            link_response = link_data['data']['uploads_response']
+            return link_response
+        else:
+            set_status_error(app, auth_token, "No valid file url found in response")
+
+def get_dl_file(url_data, cur_dl_key, app, auth_token):
+    if app.config.get('TESTING'):
+        class MockResponse:
+            def __init__(self, json_data, status_code):
+                self.json_data = json_data
+                self.status_code = status_code
+
+            def json(self):
+                return self.json_data
+    else:
+        file =  requests.get(url = url_data[cur_dl_key])
+        if file:
+            return file.text
+        else:
+            set_status_error(app, auth_token, "No valid file data found in response")
+
+def process_and_write_file(cur_file_data, file, abs_path, files_with_names, app, auth_token):
+    cur_file_column_names = []
+    cur_buf = StringIO(cur_file_data)
+    cur_first_line = cur_buf.readline()
+    cur_splitted = cur_first_line.split(',')
+    if len(cur_splitted) == 0:
+        set_status_error(app, auth_token, "Given CSV is empty")
+    for word in cur_splitted:
+        cur_processed = (word.strip()).lower()
+        cur_file_column_names.append(cur_processed)
+    files_with_names[file] = cur_file_column_names
+    write_file_loc = abs_path + file
+    with open(write_file_loc, 'w') as wFile:
+        wFile.write(cur_file_data)
+    return cur_file_column_names
+
+def extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names):
+    cur_file_column_names = []
+    g_param = {file : file}
+    url_data = get_dl_link(g_url, g_headers, g_param, app, auth_token)
+    cur_dl_key = file + "_download_url"
+    cur_r = get_dl_file(url_data, cur_dl_key, app, auth_token)
+    #parse file data and gather column names while file is open, if valid
+    if cur_r == None:
+        set_status_error(app, auth_token, "No valid file data found in response")
+    else:
+        return process_and_write_file(cur_r, file, abs_path, files_with_names, app, auth_token)
+
+def create_temp_directory(abs_path, create_folder, app, auth_token):
     #create directory
     try:
         os.makedirs(abs_path)
@@ -28,42 +126,35 @@ def extract_columns(app, auth_token, file_names) :
         #print ("Successfully created the directory, adding it to the db %s\n" % create_folder)
         insert_cwd(app, auth_token, abs_path)
 
-    #download files from s3. Make a get request from s3 endpoint
-    g_url = "http://file_system:5000/s3/downloadUploaded"
-    g_headers = {"Authorization" : 'Bearer ' + auth_token}
+
+#pass user ID (Auth token) and FileNames => output list of lists? dictionary?
+#need duplicates to help confidence to matching to a sport
+def extract_columns(app, auth_token, file_names):
+    files_with_names = {}
+    cur_path = os.getcwd()
+    #generate random number for temp csv storage folder
+    rand_file_num = random.randint(1000, 9999)
+    create_folder = str(rand_file_num)+ "_temp_files/"
+    #print("Create Folder: " + create_folder + "\n")
+    abs_path = "/temp/" + create_folder
+    create_temp_directory(abs_path, create_folder, app, auth_token)
     #get only the data for first file in file name list
     if not file_names:
         set_status_error(app, auth_token, "List of files to operate on is empty")
     else:
-        f = file_names[0]
-        g_param = {f : f}
-        dl_response = requests.get(url = g_url, headers = g_headers, params = g_param)
-        dl_data = dl_response.json()
-        upload_response = dl_data['data']['uploads_response']
-        dl_key = f + "_download_url"
-        r = requests.get(url = upload_response[dl_key])
-        #parse data and gather column names while file is open, if valid
-        file_data = r.text
-        if file_data == None:
-            set_status_error(app, auth_token, "No valid file data found in response")
-        else:
-            #print("File data retrieved writing to directory\n")
-            col_names = []
-            buf = StringIO(file_data)
-            first_line = buf.readline()
-            splitted = first_line.split(',')
-            for word in splitted:
-                processed = (word.strip()).lower()
-                #print("processed column name: " + processed)
-                #print("blah", flush= True)
-                col_names.append(processed)
-            file_with_names[f] = col_names
-            write_file_loc = abs_path + f
-            with open(write_file_loc, 'w') as wFile:
-                wFile.write(file_data)
-    #call G's ML stuff
-    matchSport(json.dumps(file_with_names), auth_token, app)
-#remove temp files after all the files are parsed
+        #download files from s3. Make a get request from s3 endpoint
+        g_url = "http://file_system:5000/s3/downloadUploaded"
+        g_headers = {"Authorization" : 'Bearer ' + auth_token}
+        #iterate through all files in given file list and parse column names for each
+        for file in file_names: 
+            files_with_names[file] = extract_file(file, g_url, g_headers, app, auth_token, abs_path, files_with_names)
+    matchSport(json.dumps(files_with_names), auth_token, app)
+    try:
+        shutil.rmtree(abs_path)
+    except OSError as e:
+       set_status_error(app, auth_token, "Unable to delete temporary file") 
+
+    #remove temp files after all the files are parsed
 
 def insert_cwd(app, auth_token, cwd):
     with app.app_context():
@@ -95,6 +186,3 @@ def set_status_error(app, auth_token, error):
 
         db.session.commit()
         return
-
-
-

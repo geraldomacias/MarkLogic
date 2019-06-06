@@ -1,5 +1,22 @@
+"""
+Copyright 2019 Team Mark
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
 # services/machine_learning/project/api/views.py
 
+import json, requests
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from flask_cors import CORS 
@@ -268,10 +285,104 @@ class MLGetClassifiedJson(MethodView):
             }
             return make_response(jsonify(responseObject)), 401
 
+class MLGetPastClassifiedAsJson(MethodView):
+    """
+    Return a Past Classification as JSON
+    """
+
+    def post(self):
+        # get the auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            # Check if decode_auth_token returned a string (which means it failed)
+            # If it succeeded, resp now holds the user_id value
+            if not isinstance(resp, str):
+                # Get the filename from the post
+                post_data = request.get_json()
+                if post_data:
+                    file_name = post_data.get('file_name')
+                    if file_name:
+                        download_url = ""
+                        # check if config is TESTING
+                        if current_app.config.get('TESTING'):
+                            if file_name == 'bad_download_code':
+                                # Simulate a bad download code
+                                download_url = "https://raw.githubusercontent.com/geraldomacias/MarkLogic/non_existant_branch/"
+                            else:
+                                # Set download_url to a test json file on repo
+                                download_url = "https://raw.githubusercontent.com/geraldomacias/MarkLogic/spencer-dev/services/machine_learning/project/tests/test.json"
+                        else:
+                            # Get download_url from file_system endpoint
+                            file_system_url = "http://file_system:5000/s3/downloadClassified"
+                            file_system_headers = {"Authorization": 'Bearer ' + auth_token}
+                            file_system_params = {"classified": file_name}
+
+                            url_response = requests.get(url = file_system_url, headers = file_system_headers, params = file_system_params)
+                            if url_response.status_code == 200:
+                                url_key = file_name + '_download_url'
+                                download_url = (url_response.json())['data']['classified_response'][url_key]
+                            else:
+                                responseObject = {
+                                    'status': 'fail',
+                                    'message': 'Error connecting to file_system.'
+                                }
+                                return make_response(jsonify(responseObject)), 500
+                        download_response = requests.get(download_url)
+                        if download_response.status_code == 200:
+                            responseObject = {
+                                'status': 'success',
+                                'message': 'Returning classified information.',
+                                'data': download_response.json()
+                            }
+                            return make_response(jsonify(responseObject)), 200
+                        else:
+                            responseObject = {
+                                'status': 'fail',
+                                'message': 'Bad response from download url. Please try downloading again, or classify your csv again.'
+                            }
+                            return make_response(jsonify(responseObject)), 404
+                    else:
+                        responseObject = {
+                        'status': 'fail',
+                        'message': 'File name not provided.'
+                    }
+                    return make_response(jsonify(responseObject)), 400
+                else:
+                    responseObject = {
+                        'status': 'fail',
+                        'message': 'File name not provided.'
+                    }
+                    return make_response(jsonify(responseObject)), 400
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
+
 # Define the API resources
 ml_start_view = MLStartAPI.as_view('startml_api')
 ml_status_view = MLStatusAPI.as_view('statusml_api')
 ml_get_classified_view = MLGetClassifiedJson.as_view('getclassified_api')
+ml_get_past_classified_json_view = MLGetPastClassifiedAsJson.as_view('getpastclassificationasjson_api')
 
 # Add rules for API endpoints
 ml_blueprint.add_url_rule(
@@ -288,4 +399,9 @@ ml_blueprint.add_url_rule(
     '/ml/classified',
     view_func=ml_get_classified_view,
     methods=['GET']
+)
+ml_blueprint.add_url_rule(
+    '/ml/past_classified_json',
+    view_func=ml_get_past_classified_json_view,
+    methods=['POST']
 )

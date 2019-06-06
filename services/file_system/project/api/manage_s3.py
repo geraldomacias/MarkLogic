@@ -1,3 +1,19 @@
+"""
+Copyright 2019 Team Mark
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
 # services/file_system/project/api/manage_s3.py
     #from project.api.upload_s3 import s3_upload_blueprint
     #app.register_blueprint(s3_upload_blueprint)
@@ -81,7 +97,7 @@ def uploads(user_id, all_files):
 
     for files in all_files:
         cur_file = all_files[files]
-        cur_name = all_files[files].filename
+        cur_name = all_files[files].filename.replace(" ", "+")
 
         if (cur_name == ''):
             uploads_response['message'] = 'no file selected'
@@ -156,7 +172,7 @@ def classified(user_id, values, all_files):
 
     for files in all_files:
         cur_file = all_files[files]
-        cur_name = all_files[files].filename
+        cur_name = all_files[files].filename.replace(" ", "+")
 
         if (cur_name == ''):
             classified_response['message'] = 'no file selected'
@@ -516,7 +532,7 @@ class DownloadClassifiedAPI(MethodView):
 
 class DeleteOriginalAPI(MethodView):
     
-    def get(self):
+    def post(self):
         auth_header = request.headers.get('Authorization')
 
         responseObject = {
@@ -533,6 +549,7 @@ class DeleteOriginalAPI(MethodView):
         user_id = auth_dict['user_id']
        
         if (len(request.values) == 0):
+            responseObject['message'] = "No files requested to be deleted"
             return make_response(jsonify(responseObject)), status_code
         
         for value in request.values:
@@ -546,7 +563,7 @@ class DeleteOriginalAPI(MethodView):
             fileName = request.values.get(value)
 
             files = S3InputFiles.query.filter(S3InputFiles.user_id == user_id, 
-            S3InputFiles.filename == fileName, 
+            S3InputFiles.filename == fileName,
             S3InputFiles.deleted == False).one()
         
             files.deleted = True
@@ -582,7 +599,7 @@ class DeleteOriginalAPI(MethodView):
 
 class DeleteClassifiedAPI(MethodView):
     
-    def get(self):
+    def post(self):
         auth_header = request.headers.get('Authorization')
 
         responseObject = {
@@ -781,10 +798,10 @@ s3_blueprint.add_url_rule(
 s3_blueprint.add_url_rule(
     '/s3/deleteFileOriginal',
     view_func=delete_original_view,
-    methods=['GET']
+    methods=['POST']
 )
 s3_blueprint.add_url_rule(
     '/s3/deleteFileClassified',
     view_func=delete_classified_view,
-    methods=['GET']
+    methods=['POST']
 )
