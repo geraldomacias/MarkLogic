@@ -1,6 +1,8 @@
 # MarkLogic Data Classifier
 [![Build Status](https://travis-ci.org/geraldomacias/MarkLogic.svg?branch=master)](https://travis-ci.org/geraldomacias/MarkLogic)
 
+For more info and documentation, check out https://geraldomacias.github.io/MarkLogic/
+
 Do YOU have a bunch of data specifically regarding sports? Well youve come to the right place. Here you will find an implementation of what you'll need.
 
 We are Team Mark, a software development team based out of Cal Poly and we welcome you to our github page. Currently we are developing a Machine Learning Data Classifier specifically applied to sports data. Our machine learner classifies data for the sports of soccer, football, baseball, hockey, and basketball. Currently our machine learner uses linear SVC and naive bayes to classify sports data based on column names and key identifiers. 
